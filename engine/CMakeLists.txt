@@ -9,7 +9,7 @@ add_library(engine STATIC
 
 	"Math/Aabb.cpp"
 
-	"Engine.cpp" "EngineUpdateLoop.cpp" "Window.cpp" "Input/Input.cpp" "Utils/Timer.cpp" "Utils/Assertions.cpp" "Utils/CrashReport.cpp" "Utils/Put.cpp" "Utils/Gui.cpp" "Utils/FixedUpdateLoop.cpp" "Utils/StringStream.cpp" "Utils/PreprocessIncludes.cpp" "Graphics/Vao.cpp" "Graphics/Vbo.cpp" "Graphics/ShaderProgram.cpp" "Graphics/Shader.cpp" "Graphics/Ibo.cpp" "Graphics/Texture.cpp" "Utils/Image32.cpp" "Utils/FileIo.cpp")
+	"Engine.cpp" "EngineUpdateLoop.cpp" "Window.cpp" "Input/Input.cpp" "Utils/Timer.cpp" "Utils/Assertions.cpp" "Utils/CrashReport.cpp" "Utils/Put.cpp" "Utils/Gui.cpp" "Utils/FixedUpdateLoop.cpp" "Utils/StringStream.cpp" "Utils/PreprocessIncludes.cpp" "Graphics/Vao.cpp" "Graphics/Vbo.cpp" "Graphics/ShaderProgram.cpp" "Graphics/Shader.cpp" "Graphics/Ibo.cpp" "Graphics/Texture.cpp" "Utils/Image32.cpp" "Utils/FileIo.cpp" "Math/Color.cpp")
 
 target_link_libraries(engine PRIVATE glfw)
 
