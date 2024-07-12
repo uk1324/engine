@@ -1,4 +1,4 @@
-add_library(gfx2d "Camera.cpp" "Gfx2d.cpp" "Quad2dPt.cpp")
+add_library(gfx2d "Camera.cpp" "Gfx2d.cpp" "Quad2dPt.cpp" "CameraUtils.cpp")
 
 include("../codeGenTool/targetAddGenerated.cmake")
 targetAddGenerated(gfx2d ${CMAKE_CURRENT_SOURCE_DIR})

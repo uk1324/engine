@@ -9,7 +9,7 @@ struct LineInstance {
     Mat3x2 transform; 
     Vec4 color; 
     float smoothing; 
-    float lineWidth; 
+    float halfLineWidth; 
     float lineLength; 
 };
 

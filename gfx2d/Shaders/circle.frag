@@ -14,15 +14,19 @@ out vec4 fragColor;
 void main() {
 	vec2 p = position;
 	
-	float d = distance(vec2(0), position);
-	d -= 1.0 - smoothing;
+	const float dist = length(position);
+	float smoothing = fwidth(dist) * 2.0;
 
-	float d1 = distance(vec2(0), position);
-	d1 -= 1.0 - width - smoothing;
-	d = subtractSdf(d, d1);
+	float d0 = dist;
+	d0 -= 1.0;
+
+	float d1 = dist;
+	d1 -= 1.0 - width;
+
+	float d;
+	d = subtractSdf(d0, d1);
+	d += smoothing;
 	d = smoothstep(smoothing, 0.0, d);
 
-//	fragColor = vec4(vec3(d), 1.0);
-//	return;
 	fragColor = vec4(color.rgb, d * color.a);
 }

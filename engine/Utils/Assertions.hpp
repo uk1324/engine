@@ -15,6 +15,14 @@ bool assertImplementation(bool condition, const char* functionName, int line);
 #define ASSERT(condition) assertImplementation(condition, FUNCTION_SIGNATURE, __LINE__)
 #define ASSERT_NOT_REACHED() ASSERT(false)
 
+#ifdef DEBUG
+#define DEBUG_ASSERT(condition) assertImplementation(condition, FUNCTION_SIGNATURE, __LINE__)
+#define DEBUG_ASSERT_NOT_REACHED() ASSERT(false)
+#else 
+#define DEBUG_ASSERT(condition)
+#define DEBUG_ASSERT_NOT_REACHED()
+#endif
+
 // TODO: For checks maybe allow continuing
 #ifdef FINAL_RELEASE
 #define CHECK(condition)

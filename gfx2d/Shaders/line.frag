@@ -4,27 +4,22 @@ in vec2 position;
 
 in vec4 color; 
 in float smoothing; 
-in float lineWidth; 
+in float halfLineWidth; 
 in float lineLength; 
 out vec4 fragColor;
 
 /*generated end*/
 
 void main() {
-	float len = lineLength;
-	float x = position.x * len;
-	float d;
-	if (x < lineWidth || x > len - lineWidth) {
-		float clampedX = clamp(x, lineWidth, len - lineWidth);
-		d = distance(vec2(x, position.y * lineWidth), vec2(clampedX, 0.0));
-	} else {
-		d = abs(position.y) * lineWidth;
-	}
-	d /= lineWidth;
+	vec2 point = vec2(position.x * lineLength, position.y * halfLineWidth);
 
-	//fragColor = vec4(vec3(d), 1.0);
-	//return;
-	d -= 1.0 - smoothing;
+	float endpoint0X = halfLineWidth;
+	float endpoint1X = lineLength - halfLineWidth;
+	vec2 pointProjectedOntoLine = vec2(clamp(point.x, endpoint0X, endpoint1X), 0.0);
+	float d = distance(point, pointProjectedOntoLine);
+
+	float smoothing = fwidth(d) * 2.0;
+	d -= halfLineWidth - smoothing;
 	d = smoothstep(smoothing, 0.0, d);
 
 	fragColor = vec4(color.rgb, d);

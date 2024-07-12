@@ -7,7 +7,7 @@
 
 bool assertImplementation(bool condition, const char* functionName, int line) {
 	if (condition) {
-		return condition;
+		return !condition;
 	}
 	#ifndef FINAL_RELEASE
 	DEBUG_BREAK();
@@ -25,5 +25,5 @@ bool assertImplementation(bool condition, const char* functionName, int line) {
 	exit(EXIT_FAILURE);
 	#endif
 
-	return condition;
+	return !condition;
 }

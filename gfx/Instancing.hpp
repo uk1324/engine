@@ -2,6 +2,7 @@
 #include <engine/Graphics/Vao.hpp>
 #include <engine/Graphics/Vbo.hpp>
 #include <engine/Graphics/Ibo.hpp>
+#include <View.hpp>
 #include <vector>
 #include <glad/glad.h>
 
@@ -17,7 +18,7 @@ static Vao createInstancingVao(Vbo& verticesVbo, Ibo& verticesIbo, Vbo& instance
 }
 
 template<typename Instance, typename DrawFunction>
-static void drawInstances(Vao& vao, Vbo& instancesVbo, const std::vector<Instance>& instances, DrawFunction drawFunction) {
+static void drawInstances(Vao& vao, Vbo& instancesVbo, const View<const Instance>& instances, DrawFunction drawFunction) {
 	vao.bind();
 	instancesVbo.bind();
 

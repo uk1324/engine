@@ -30,7 +30,7 @@ auto Aabb::fromCorners(Vec2 a, Vec2 b) -> Aabb {
 	return Aabb{ min, max };
 }
 
-auto Aabb::fromPoints(std::span<const Vec2> points) -> Aabb {
+auto Aabb::fromPoints(View<const Vec2> points) -> Aabb {
 	Vec2 min{ std::numeric_limits<float>::infinity() }, max{ -std::numeric_limits<float>::infinity() };
 
 	for (const auto& point : points) {
