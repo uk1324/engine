@@ -99,7 +99,7 @@ void Gfx2d::circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color, i32 
 		oldVertexInside = vertexInside;
 		oldVertexOutside = vertexOutside;
 	}
-	addFilledQuad(oldVertexInside, oldVertexOutside, firstVertexInside, firstVertexOutside);
+	addFilledQuad(oldVertexInside, oldVertexOutside, firstVertexOutside, firstVertexInside);
 }
 
 void Gfx2d::circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color) {

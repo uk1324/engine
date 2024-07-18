@@ -43,4 +43,5 @@
 // x = h
 
 bool isPointInPolygon(View<const Vec2> verts, Vec2 p);
+bool isPointInTransformedPolygon(View<const Vec2> verts, Vec2 translation, f32 rotation, Vec2 p);
 bool isPointInCircle(Vec2 center, f32 radius, Vec2 point);

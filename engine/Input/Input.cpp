@@ -121,8 +121,9 @@ auto Input::onKeyDown(u16 virtualKeyCode, bool autoRepeat) -> void {
 	}
 	keyDownWithAutoRepeat.set(virtualKeyCode);
 
-
-	lastKeycodeDownThisFrame_ = static_cast<KeyCode>(virtualKeyCode);
+	if (!isMouseButton(virtualKeyCode)) {
+		lastKeycodeDownThisFrame_ = static_cast<KeyCode>(virtualKeyCode);
+	}
 }
 
 auto Input::onKeyUp(u16 virtualKeyCode) -> void {

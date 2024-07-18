@@ -27,7 +27,7 @@ enum class PropertyEditorFlags {
 	TableAdjustable,
 	TableStetchToFit
 };
-bool beginPropertyEditor(PropertyEditorFlags flags = PropertyEditorFlags::TableStetchToFit);
+bool beginPropertyEditor(const char* id, PropertyEditorFlags flags = PropertyEditorFlags::TableStetchToFit);
 void endPropertyEditor();
 void popPropertyEditor();
 
@@ -45,6 +45,8 @@ void put(const char* format, const Args&... args) {
 	ImGui::Text("%s", stream.string().c_str());
 }
 
+void leafNodeBegin(const char* name);
+const char* prependWithHashHash(const char* str);
 }
 
 #define GUI_PROPERTY_EDITOR(editorCode) \

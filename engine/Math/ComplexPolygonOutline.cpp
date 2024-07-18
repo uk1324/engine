@@ -1,7 +1,7 @@
 #include "ComplexPolygonOutline.hpp"
 #include "LineSegment.hpp"
 
-auto complexPolygonOutline(View<const Vec2> vertices, std::vector<Vec2>& result) -> const std::vector<Vec2>& {
+std::optional<const std::vector<Vec2>&> complexPolygonOutline(View<const Vec2> vertices, std::vector<Vec2>& result) {
 	result.clear();
 	if (vertices.size() <= 3) {
 		result.insert(result.begin(), vertices.begin(), vertices.end());
@@ -44,7 +44,19 @@ auto complexPolygonOutline(View<const Vec2> vertices, std::vector<Vec2>& result)
 	std::optional<int> ignored1;
 	int ignored11 = 0;
 	result.push_back(current);
+
+	i64 iterationCount = 0;
+	// upper bound on number of vertices needed to be traversed.
+	const auto maxIterations = 
+		vertices.size() * (vertices.size() - 1) / 2 + // maximum number intersections of 'number of vertices' lines
+		vertices.size(); // 'number of vertices'
+
 	while (true) {
+		if (iterationCount >= maxIterations) {
+			return std::nullopt;
+		}
+		iterationCount++;
+
 		const auto line = LineSegment{ current, vertices[nextIndex] };
 		const auto sizeBefore = result.size();
 

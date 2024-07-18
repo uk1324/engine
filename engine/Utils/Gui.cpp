@@ -5,7 +5,7 @@ using namespace Gui;
 using namespace ImGui;
 
 thread_local std::string string;
-static const char* prependWithHashHash(const char* str) {
+const char* Gui::prependWithHashHash(const char* str) {
 	const auto offset = string.size();
 	string += "##";
 	string += str;
@@ -13,7 +13,7 @@ static const char* prependWithHashHash(const char* str) {
 	return string.data() + offset;
 }
 
-static void leafNodeBegin(const char* name) {
+void Gui::leafNodeBegin(const char* name) {
 	ImGui::TableNextRow();
 	ImGui::TableSetColumnIndex(0);
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
@@ -77,7 +77,7 @@ bool Gui::inputText(const char* name, char* buffer, usize size) {
 	return ImGui::InputText(prependWithHashHash(name), buffer, size);
 }
 
-bool Gui::beginPropertyEditor(PropertyEditorFlags flags) {
+bool Gui::beginPropertyEditor(const char* id, PropertyEditorFlags flags) {
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
 	ImGuiTableFlags tableFlags = 0;
 	switch (flags) {
@@ -90,7 +90,7 @@ bool Gui::beginPropertyEditor(PropertyEditorFlags flags) {
 		tableFlags = ImGuiTableFlags_SizingStretchProp;
 		break;
 	}
-	return ImGui::BeginTable("split", 2, tableFlags);
+	return ImGui::BeginTable(id, 2, tableFlags);
 	//return ImGui::BeginTable("split", 2, ImGuiTableFlags_SizingFixedSame);
 	//return ImGui::BeginTable("split", 2, ImGuiTableFlags_Resizable);
 	//return ImGui::BeginTable("split", 2, ImGuiTableFlags_SizingFixedFit);

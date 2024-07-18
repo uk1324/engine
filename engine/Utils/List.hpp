@@ -25,7 +25,7 @@ struct List {
 	void addView(const View<const T> view);
 	void pop();
 
-	List clone();
+	List clone() const;
 
 	void resizeWithoutInitialization(i64 newSize);
 	void clear();
@@ -135,7 +135,7 @@ void List<T>::pop() {
 }
 
 template<typename T>
-List<T> List<T>::clone() {
+List<T> List<T>::clone() const {
 	auto cloneData = reinterpret_cast<T*>(operator new(capacity_ * sizeof(T)));
 	for (i64 i = 0; i < size_; i++) {
 		new (&cloneData[i]) T(data_[i]);
@@ -196,6 +196,7 @@ List<T>& List<T>::operator=(List&& other) noexcept {
 	other.data_ = nullptr;
 	other.size_ = 0;
 	other.capacity_ = 0;
+	return *this;
 }
 
 template<typename T>
