@@ -11,7 +11,8 @@ struct ShaderManager {
 
 
 #ifdef FINAL_RELEASE
-#include <generated/shaderSources.hpp>
+//#include <generated/shaderSources.hpp>
+#include "../generated/shaderSources.hpp"
 #define MAKE_GENERATED_SHADER(name) ShaderManager::makeShaderFromSource(name##_SHADER_VERT_SOURCE, name##_SHADER_FRAG_SOURCE)
 #else
 #define MAKE_GENERATED_SHADER(name) ShaderManager::makeShader(name##_SHADER_VERT_PATH, name##_SHADER_FRAG_PATH)

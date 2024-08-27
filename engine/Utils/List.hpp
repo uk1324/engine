@@ -37,6 +37,9 @@ struct List {
 	List& operator=(const List&) = delete;
 	List& operator=(List&& other) noexcept;
 
+	bool operator==(const List& other) const;
+	bool operator!=(const List& other) const;
+
 	T* begin();
 	T* end();
 
@@ -147,6 +150,7 @@ template<typename T>
 void List<T>::resizeWithoutInitialization(i64 newSize) {
 	if (newSize > capacity_) {
 		capacity_ = std::max(calculateCapacity(), newSize);
+		operator delete (data_);
 		data_ = reinterpret_cast<T*>(operator new(capacity_ * sizeof(T)));
 	}
 	size_ = newSize;
@@ -162,13 +166,13 @@ void List<T>::clear() {
 
 template<typename T>
 T& List<T>::operator[](i64 index) {
-	DEBUG_ASSERT(index < size_);
+	DEBUG_ASSERT(index > 0 && index < size_);
 	return data_[index];
 }
 
 template<typename T>
 const T& List<T>::operator[](i64 index) const {
-	DEBUG_ASSERT(index < size_);
+	DEBUG_ASSERT(index > 0 && index < size_);
 	return data_[index];
 }
 
@@ -197,6 +201,25 @@ List<T>& List<T>::operator=(List&& other) noexcept {
 	other.size_ = 0;
 	other.capacity_ = 0;
 	return *this;
+}
+
+template<typename T>
+bool List<T>::operator==(const List& other) const {
+	if (size_ != other.size_) {
+		return false;
+	}
+
+	for (i64 i = 0; i < size_; i++) {
+		if (data_[i] != other.data_[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+template<typename T>
+bool List<T>::operator!=(const List& other) const {
+	return !operator==(other);
 }
 
 template<typename T>
@@ -238,7 +261,6 @@ template<typename T>
 i64 List<T>::byteSize() const {
 	return size_ * sizeof(T);
 }
-
 
 template<typename T>
 T* List<T>::data() {

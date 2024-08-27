@@ -116,7 +116,9 @@ changed |= inputI32("<displayedName>", <name>);
 >>
 
 toJson(dataType, name) ::= <<
-<if(dataType.isFloat || dataType.isBool || dataType.isI32)><\\>
+<if(dataType.isI32)><\\>
+json["<name>"] = Json::Value(Json::Value::IntType(value.<name>));
+<elseif(dataType.isFloat || dataType.isBool)><\\>
 json["<name>"] = Json::Value(value.<name>);
 <else><\\>
 json["<name>"] = toJson(value.<name>);
@@ -127,7 +129,7 @@ fromJson(dataType, name) ::= <<
 <if(dataType.isFloat)><\\>
 <name>.number()<\\>
 <elseif(dataType.isI32)><\\>
-<name>.intNumber()<\\>
+i32(<name>.intNumber())<\\>
 <elseif(dataType.isBool)><\\>
 <name>.boolean()<\\>
 <elseif(dataType.isMap)><\\>
@@ -147,6 +149,15 @@ fromJson(dataType, name) ::= <<
         result.push_back(fromJson\<<dataType.itemDataType.name>\>(item));
     }
     return result;
+}()
+<elseif(dataType.isOptional)><\\>
+[&]() -> std::optional\<<dataType.itemDataType.name>\> {
+    auto& optional = <name>;
+    if (optional.at("hasValue").boolean()) {
+        return <fromJson(dataType.itemDataType, "optional.at(\"value\")")>;
+    } else {
+        return std::nullopt;
+    }
 }()
 <else><\\>
 fromJson\<<dataType.name>\>(<name>)<\\>

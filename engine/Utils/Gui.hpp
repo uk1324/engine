@@ -11,7 +11,6 @@
 namespace Gui {
 
 void update();
-
 bool inputI32(const char* name, i32& value);
 bool sliderI32(const char* name, i32& value, i32 min, i32 max);
 bool inputFloat(const char* name, float& value);

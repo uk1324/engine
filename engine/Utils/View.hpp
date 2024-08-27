@@ -47,6 +47,9 @@ private:
 template<typename T, usize SIZE>
 View<const T> constView(const T(&array)[SIZE]);
 
+template<typename T, usize SIZE>
+View<const T> constView(const std::array<T, SIZE>& array);
+
 template<typename T> 
 View<const T> constView(const T& singleValue);
 
@@ -195,6 +198,11 @@ const T* View<T>::data() const {
 template<typename T, usize SIZE>
 View<const T> constView(const T(&array)[SIZE]) {
 	return View<const T>(array, SIZE);
+}
+
+template<typename T, usize SIZE>
+View<const T> constView(const std::array<T, SIZE>& array) {
+	return View<const T>(array.data(), array.size());
 }
 
 template<typename T>

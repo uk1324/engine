@@ -11,9 +11,10 @@
 
 // Returns condition back.
 bool assertImplementation(bool condition, const char* functionName, int line);
+[[noreturn]] void assertNotReachedImplementation(const char* functionName, int line);
 
 #define ASSERT(condition) assertImplementation(condition, FUNCTION_SIGNATURE, __LINE__)
-#define ASSERT_NOT_REACHED() ASSERT(false)
+#define ASSERT_NOT_REACHED() assertNotReachedImplementation(FUNCTION_SIGNATURE, __LINE__);
 
 #ifdef DEBUG
 #define DEBUG_ASSERT(condition) assertImplementation(condition, FUNCTION_SIGNATURE, __LINE__)

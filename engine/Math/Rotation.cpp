@@ -1,6 +1,11 @@
 #include "Rotation.hpp"
 #include <math.h>
 
+Rotation Rotation::fromDirection(Vec2 direction) {
+	direction = direction.normalized();
+	return Rotation(direction.x, direction.y);
+}
+
 Rotation::Rotation(float cos, float sin)
 	: sin{ sin }
 	, cos{ cos } {}

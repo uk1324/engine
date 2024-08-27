@@ -4,7 +4,7 @@
 #include <engine/Window.hpp>
 
 namespace Engine {
-	void initAll(const Window::Settings& windowSettings);
+	void initAll(const Window::Settings& windowSettings, const char* imGuiFontPath);
 	void terminateAll();
 
 	void initGlfw();
@@ -12,7 +12,7 @@ namespace Engine {
 
 	void initOpenGl();
 
-	void initImGui();
+	void initImGui(const char* fontPath);
 	void terminateImGui();
 
 	void updateFrameStart();

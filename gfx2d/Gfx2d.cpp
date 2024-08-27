@@ -46,6 +46,12 @@ Gfx2d Gfx2d::make() {
 	};
 }
 
+i32 Gfx2d::addFilledTriangleVertex(Vec2 pos, Vec4 color) {
+	const auto index = filledTrianglesVertices.size();
+	filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = color });
+	return index;
+}
+
 void Gfx2d::addFilledTriangle(u32 i0, u32 i1, u32 i2) {
 	filledTrianglesIndices.add(i0);
 	filledTrianglesIndices.add(i1);
@@ -217,6 +223,22 @@ void Gfx2d::polylineTriangulated(View<const Vec2> vertices, f32 width, Vec3 colo
 
 void Gfx2d::polylineTriangulated(View<const Vec2> vertices, f32 width, Vec3 color) {
 	polylineTriangulated(vertices, width, color, calculateCircleVertexCount(width / 2.0f) / 2);
+}
+
+void Gfx2d::polygonTriangulated(View<const Vec2> vertices, f32 width, Vec3 color, i32 endpointVertices) {
+	if (vertices.size() < 2) {
+		return;
+	}
+
+	i64 previous = vertices.size() - 1;
+	for (i64 i = 0; i < vertices.size(); previous = i, i++) {
+		lineTriangulated(vertices[previous], vertices[i], width, color, endpointVertices);
+		previous = i;
+	}
+}
+
+void Gfx2d::polygonTriangulated(View<const Vec2> vertices, f32 width, Vec3 color) {
+	polygonTriangulated(vertices, width, color, calculateCircleVertexCount(width / 2.0f) / 2);
 }
 
 void Gfx2d::filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec4 color) {

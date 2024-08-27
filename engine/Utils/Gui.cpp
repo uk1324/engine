@@ -29,7 +29,8 @@ void Gui::update() {
 // Remember to always use prependWithHashHash
 bool Gui::inputI32(const char* name, i32& value) {
 	leafNodeBegin(name);
-	return ImGui::InputScalar(prependWithHashHash(name), ImGuiDataType_S32, reinterpret_cast<void*>(&value));
+	/*return ImGui::InputScalar(prependWithHashHash(name), ImGuiDataType_S32, reinterpret_cast<void*>(&value));*/
+	return ImGui::InputInt(prependWithHashHash(name), &value);
 }
 
 bool Gui::sliderI32(const char* name, i32& value, i32 min, i32 max) {

@@ -83,7 +83,7 @@ static void openGlErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 }
 
-void Engine::initAll(const Window::Settings& windowSettings) {
+void Engine::initAll(const Window::Settings& windowSettings, const char* imGuiFontPath) {
 	Timer timer;
 	put("Engine::init start");
 	initGlfw();
@@ -93,7 +93,7 @@ void Engine::initAll(const Window::Settings& windowSettings) {
 		put("Window::init took: %", timer.elapsedMilliseconds());
 	}
 	initOpenGl();
-	initImGui();
+	initImGui(imGuiFontPath);
 
 	put("Engine::init took: %", timer.elapsedMilliseconds());
 }
@@ -131,7 +131,7 @@ void Engine::initOpenGl() {
 	}
 }
 
-void Engine::initImGui() {
+void Engine::initImGui(const char* fontPath) {
 	IMGUI_CHECKVERSION();
 
 	ImGui::CreateContext();
@@ -139,7 +139,7 @@ void Engine::initImGui() {
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 	
-	io.Fonts->AddFontFromFileTTF("engine/assets/fonts/RobotoMono-Regular.ttf", 20);
+	io.Fonts->AddFontFromFileTTF(fontPath, 20);
 	/*io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;*/
 	auto& style = ImGui::GetStyle();
 	style.WindowRounding = 5.0f;

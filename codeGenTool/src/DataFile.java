@@ -421,6 +421,9 @@ abstract class DataType {
     public boolean getIsVector() {
         return this instanceof VectorDataType;
     }
+    public boolean getIsOptional () {
+        return this instanceof OptionalDataType;
+    }
     public boolean getIsMap() {
         return this instanceof MapDataType;
     }
@@ -508,6 +511,19 @@ class VectorDataType extends DataType {
     @Override
     public String getName() {
         return "std::vector<" + itemDataType.getName() + ">";
+    }
+}
+
+class OptionalDataType extends DataType {
+    public DataType itemDataType;
+
+    OptionalDataType(DataType itemDataType) {
+        this.itemDataType = itemDataType;
+    }
+
+    @Override
+    public String getName() {
+        return "std::optional<" + itemDataType.getName() + ">";
     }
 }
 

@@ -461,7 +461,12 @@ public class Parser {
             var itemDataType = dataType();
             expect(TokenType.MORE_THAN);
             return new VectorDataType(itemDataType);
-        } else if (matchIdentifier("map")) {
+        } else if (matchIdentifier("optional")) {
+            expect(TokenType.LESS_THAN);
+            var itemDataType = dataType();
+            expect(TokenType.MORE_THAN);
+            return new OptionalDataType(itemDataType);
+        }  else if (matchIdentifier("map")) {
             expect(TokenType.LESS_THAN);
             var key = dataType();
             expect(TokenType.COMMA);

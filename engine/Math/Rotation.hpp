@@ -3,6 +3,7 @@
 #include "Vec2.hpp"
 
 struct Rotation {
+	static Rotation fromDirection(Vec2 direction);
 	Rotation(float cos, float sin);
 	Rotation(float angle);
 

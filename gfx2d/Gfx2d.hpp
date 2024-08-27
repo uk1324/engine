@@ -29,9 +29,11 @@ struct Gfx2d {
 	List<LineInstance> lineInstances;
 	
 	List<u32> filledTrianglesIndices;
+	i32 addFilledTriangleVertex(Vec2 pos, Vec4 color);
 	void addFilledTriangle(u32 i0, u32 i1, u32 i2);
 	// the input should be the vertices ordered counterclockwise.
 	void addFilledQuad(u32 i0, u32 i1, u32 i2, u32 i3);
+	// @Performance: Instead of using `Vec4`s for colors, could use 32 bit rgba.
 	List<Vertex2Pc> filledTrianglesVertices;
 
 	Vbo filledTrianglesVbo;
@@ -54,6 +56,9 @@ struct Gfx2d {
 	void polyline(View<const Vec2> vertices, f32 width, Vec3 color);
 	void polylineTriangulated(View<const Vec2> vertices, f32 width, Vec3 color, i32 endpointVertices);
 	void polylineTriangulated(View<const Vec2> vertices, f32 width, Vec3 color);
+	void polygonTriangulated(View<const Vec2> vertices, f32 width, Vec3 color, i32 endpointVertices);
+	void polygonTriangulated(View<const Vec2> vertices, f32 width, Vec3 color);
+	void filledTriangle(Vec2 v0, Vec2 v1, Vec2 v2, Vec4 color);
 	void filledTriangle(Vec2 v0, Vec2 v1, Vec2 v2, Vec3 color);
 	void filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec4 color);
 	void filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec3 color);
