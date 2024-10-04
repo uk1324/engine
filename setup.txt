@@ -1,0 +1,4 @@
+// Before starting create a reate repo
+
+git clone --recurse-submodules https://github.com/uk1324/engine.git
+cp -a . ./engine/exampleProject
