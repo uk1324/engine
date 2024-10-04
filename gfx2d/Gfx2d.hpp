@@ -44,6 +44,8 @@ struct Gfx2d {
 	void circle(Vec2 pos, f32 radius, f32 width, Vec3 color);
 	void circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color, i32 vertices);
 	void circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color);
+	void circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color, i32 vertices);
+	void circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color);
 	void disk(Vec2 pos, f32 radius, Vec3 color);
 	void diskTriangulated(Vec2 pos, f32 radius, Vec4 color, i32 vertices);
 	void diskTriangulated(Vec2 pos, f32 radius, Vec4 color);

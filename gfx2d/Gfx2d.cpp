@@ -112,6 +112,42 @@ void Gfx2d::circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color) {
 	circleTriangulated(pos, radius, width, color, calculateCircleVertexCount(radius));
 }
 
+void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color, i32 vertices) {
+	auto addVertex = [&](Vec2 pos) -> u32 {
+		const auto index = filledTrianglesVertices.size();
+		filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = Vec4(color, 1.0f) });
+		return index;
+	};
+
+	// TODO: Maybe clamp?
+	const auto insideRadius = radius - width;
+
+	const auto center = addVertex(pos);
+
+	const auto direction = Vec2::oriented(startAngle);
+	const auto firstVertexInside = addVertex(pos + direction * insideRadius);
+	const auto firstVertexOutside = addVertex(pos + direction * radius);
+	u32 oldVertexInside = firstVertexInside;
+	u32 oldVertexOutside = firstVertexOutside;
+	for (i32 i = 1; i < vertices; i++) {
+		const auto t = f32(i) / f32(vertices - 1);
+		const auto angle = lerp(startAngle, endAngle, t);
+		const auto direction = Vec2::oriented(angle);
+		const auto vertexInside = addVertex(pos + direction * insideRadius);
+		const auto vertexOutside = addVertex(pos + direction * radius);
+
+		addFilledQuad(oldVertexInside, oldVertexOutside, vertexOutside, vertexInside);
+
+		oldVertexInside = vertexInside;
+		oldVertexOutside = vertexOutside;
+	}
+}
+
+void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color) {
+	const auto vertices = i32((endAngle - startAngle) / TAU<f32> * calculateCircleVertexCount(radius));
+	circleArcTriangulated(pos, radius, startAngle, endAngle, width, color, vertices);
+}
+
 void Gfx2d::disk(Vec2 pos, f32 radius, Vec3 color) {
 	diskInstances.add(DiskInstance{
 		.transform = camera.makeTransform(pos, 0.0f, Vec2(radius)),

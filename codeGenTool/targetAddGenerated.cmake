@@ -25,7 +25,9 @@ function(targetAddGenerated targetName directoryToScan)
 		)
 		add_dependencies(${targetName} "sharedTarget${DATA_FILE_NAME}")
 	endforeach(DATA_FILE)
-	target_sources(${targetName} PUBLIC ${GENERATED_FILES})
+	# https://stackoverflow.com/questions/38422056/cmake-cannot-find-source-file-on-add-library-of-sibling-library
+	# target_sources(${targetName} PUBLIC ${GENERATED_FILES})
+	target_sources(${targetName} PRIVATE ${GENERATED_FILES})
 endfunction()
 
 # # This function only adds the dependencies. You cannot create the targets twice. The reason this needs to exsit is because for example
