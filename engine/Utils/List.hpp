@@ -107,7 +107,7 @@ void List<T>::add(T&& value) {
 		capacity_ = calculateCapacity();
 		auto newData = reinterpret_cast<T*>(operator new(capacity_ * sizeof(T)));
 
-		for (size_t i = 0; i < size_; i++) {
+		for (i64 i = 0; i < size_; i++) {
 			new (&newData[i]) T(std::move(data_[i]));
 			// TODO: Does the old data need to be destroyed?
 		}
