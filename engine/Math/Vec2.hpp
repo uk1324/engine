@@ -35,6 +35,7 @@ struct Vec2T {
 	T distanceTo(Vec2T p) const;
 	T distanceSquaredTo(Vec2T p) const;
 	Vec2T roundedToDecimalDigits(int digitsCount) const;
+	Vec2T reflectedAroundNormal(Vec2T normal) const;
 
 	auto operator+(const Vec2T& v) const -> Vec2T;
 	auto operator+=(const Vec2T& v) -> Vec2T&;
@@ -233,6 +234,11 @@ template<typename T>
 Vec2T<T> Vec2T<T>::roundedToDecimalDigits(int digitsCount) const {
 	const auto scale = pow(10.0f, digitsCount);
 	return (*this * scale).applied(floor) / scale;
+}
+
+template<typename T>
+Vec2T<T> Vec2T<T>::reflectedAroundNormal(Vec2T normal) const {
+	return T(2) * dot(normal, *this) * normal - *this;
 }
 
 template<typename T>

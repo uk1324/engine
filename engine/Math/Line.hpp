@@ -8,6 +8,8 @@ struct Line {
 	Line(Vec2 n, float d);
 	// The normal is the line from a to b rotated counterclockwise.
 	Line(Vec2 a, Vec2 b);
+	static Line fromPointAndNormal(Vec2 point, Vec2 normal);
+	static Line fromParametric(Vec2 point, Vec2 tangent);
 	auto translated(Vec2 v) const -> Line;
 	auto distanceAlong(Vec2 v) const -> float;
 	auto projectPointOntoLine(Vec2 p) const -> Vec2;

@@ -11,14 +11,18 @@ struct QuatT {
 	Vec3T<T> operator* (const Vec3T<T>& rhs) const;
 
 	QuatT conjugate() const;
+	// Rotations are by definition normalized.
+	QuatT inverseIfNormalized() const;
+
+	const static QuatT identity;
 
 	T x, y, z, w;
 };
 
 template<typename T>
-Vec3T<T> operator* (const Vec3T<T>& lhs, const QuatT<T>& rhs);
+Vec3T<T> operator*(const Vec3T<T>& lhs, const QuatT<T>& rhs);
 template<typename T>
-Vec3T<T>& operator*= (Vec3T<T>& lhs, const QuatT<T>& rhs);
+Vec3T<T>& operator*=(Vec3T<T>& lhs, const QuatT<T>& rhs);
 
 using Quat = QuatT<float>;
 
@@ -61,6 +65,11 @@ QuatT<T> QuatT<T>::conjugate() const {
 }
 
 template<typename T>
+QuatT<T> QuatT<T>::inverseIfNormalized() const {
+	return conjugate();
+}
+
+template<typename T>
 Vec3T<T> operator* (const Vec3T<T>& lhs, const QuatT<T>& rhs) {
 	return rhs * lhs;
 }
@@ -70,3 +79,6 @@ Vec3T<T>& operator*= (Vec3T<T>& lhs, const QuatT<T>& rhs) {
 	lhs = lhs * rhs;
 	return lhs;
 }
+
+template<typename T>
+const QuatT<T> QuatT<T>::identity = QuatT<T>(0, 0, 0, 1);

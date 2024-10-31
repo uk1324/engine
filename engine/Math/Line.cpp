@@ -8,7 +8,15 @@ Line::Line(Vec2 n, float d)
 
 Line::Line(Vec2 a, Vec2 b)
 	: n((b - a).rotBy90deg().normalized()) 
-	, d (dot(n, b)) {
+	, d(dot(n, b)) {
+}
+
+Line Line::fromPointAndNormal(Vec2 point, Vec2 normal) {
+	return Line(normal, dot(normal, point));
+}
+
+Line Line::fromParametric(Vec2 point, Vec2 tangent) {
+	return fromPointAndNormal(point, tangent.rotBy90deg());
 }
 
 auto Line::translated(Vec2 v) const -> Line {
