@@ -72,6 +72,8 @@ struct Gfx2d {
 	void drawDisks();
 	void drawFilledTriangles();
 
+	void drawDebug();
+
 	f32 getQuadPixelSizeY(f32 scale);
 	i32 calculateCircleVertexCount(f32 radius) const;
 

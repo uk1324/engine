@@ -378,6 +378,17 @@ void Gfx2d::drawFilledTriangles() {
 	filledTrianglesVertices.clear();
 }
 
+#include <gfx2d/DbgGfx2d.hpp>
+
+void Gfx2d::drawDebug() {
+#ifndef FINAL_RELEASE
+	for (const auto& disk : Dbg::disks) {
+		Gfx2d::disk(disk.pos, disk.radius, disk.color);
+	}
+	drawDisks();
+#endif
+}
+
 f32 Gfx2d::getQuadPixelSizeY(f32 scale) {
 	return scale * camera.zoom * Window::size().y;
 }
