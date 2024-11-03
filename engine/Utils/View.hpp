@@ -196,6 +196,11 @@ const T* View<T>::data() const {
 }
 
 template<typename T, usize SIZE>
+View<T> view(T(&array)[SIZE]) {
+	return View<T>(array, SIZE);
+}
+
+template<typename T, usize SIZE>
 View<const T> constView(const T(&array)[SIZE]) {
 	return View<const T>(array, SIZE);
 }

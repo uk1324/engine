@@ -113,10 +113,10 @@ void Gfx2d::circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color) {
 	circleTriangulated(pos, radius, width, color, calculateCircleVertexCount(radius));
 }
 
-void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color, i32 vertices) {
+void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec4 color, i32 vertices) {
 	auto addVertex = [&](Vec2 pos) -> u32 {
 		const auto index = filledTrianglesVertices.size();
-		filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = Vec4(color, 1.0f) });
+		filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = color });
 		return u32(index);
 	};
 
@@ -143,6 +143,15 @@ void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endA
 		oldVertexInside = vertexInside;
 		oldVertexOutside = vertexOutside;
 	}
+}
+
+void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color, i32 vertices) {
+	circleArcTriangulated(pos, radius, startAngle, endAngle, width, Vec4(color, 1.0f), vertices);
+}
+
+void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec4 color) {
+	const auto vertices = i32((endAngle - startAngle) / TAU<f32> *calculateCircleVertexCount(radius));
+	circleArcTriangulated(pos, radius, startAngle, endAngle, width, color, vertices);
 }
 
 void Gfx2d::circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color) {
@@ -295,10 +304,13 @@ void Gfx2d::filledTriangles(View<const Vec2> vertices, View<const i32> indices, 
 }
 
 void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color, i32 endpointVertices) {
-	//const auto offset = filledTrianglesVertices.size();
+	lineTriangulated(endpoint0, endpoint1, width, Vec4(color, 1.0f), endpointVertices);
+}
+
+void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec4 color, i32 endpointVertices) {
 	auto addVertex = [&](Vec2 pos) -> u32 {
 		const auto index = filledTrianglesVertices.size();
-		filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = Vec4(color, 1.0f) });
+		filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = color });
 		return u32(index);
 	};
 	const auto endpointToVertex = (endpoint1 - endpoint0).normalized().rotBy90deg() * width / 2.0f;
@@ -306,7 +318,7 @@ void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 col
 	const auto v10 = addVertex(endpoint0 + endpointToVertex);
 	const auto v01 = addVertex(endpoint1 - endpointToVertex);
 	const auto v11 = addVertex(endpoint1 + endpointToVertex);
-	
+
 	/*
 	v00--endpoint0--v10
 	 |               |
@@ -322,7 +334,7 @@ void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 col
 	const auto endAngle = startAngle + PI<f32>;
 
 	auto endpoint0PreviousVertex = v00;
-	auto endpoint1PreviousVertex = v11; 
+	auto endpoint1PreviousVertex = v11;
 	for (i32 i = 1; i < endpointVertices - 1; i++) {
 		const auto t = f32(i) / f32(endpointVertices - 1);
 		const auto angle = lerp(startAngle, endAngle, t);
@@ -342,6 +354,10 @@ void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 col
 }
 
 void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color) {
+	lineTriangulated(endpoint0, endpoint1, width, color, calculateCircleVertexCount(width / 2.0f) / 2);
+}
+
+void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec4 color) {
 	lineTriangulated(endpoint0, endpoint1, width, color, calculateCircleVertexCount(width / 2.0f) / 2);
 }
 
@@ -386,7 +402,13 @@ void Gfx2d::drawDebug() {
 		Gfx2d::disk(disk.pos, disk.radius, disk.color);
 	}
 	drawDisks();
+
+	for (const auto& line : Dbg::lines) {
+		Gfx2d::line(line.e0, line.e1, line.width, line.color);
+	}
+	drawLines();
 #endif
+	Dbg::update();
 }
 
 f32 Gfx2d::getQuadPixelSizeY(f32 scale) {

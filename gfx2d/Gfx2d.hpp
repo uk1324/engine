@@ -45,7 +45,9 @@ struct Gfx2d {
 	void circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color, i32 vertices);
 	void circleTriangulated(Vec2 pos, f32 radius, f32 width, Vec3 color);
 	void circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color, i32 vertices);
+	void circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec4 color, i32 vertices);
 	void circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec3 color);
+	void circleArcTriangulated(Vec2 pos, f32 radius, f32 startAngle, f32 endAngle, f32 width, Vec4 color);
 	void disk(Vec2 pos, f32 radius, Vec3 color);
 	void diskTriangulated(Vec2 pos, f32 radius, Vec4 color, i32 vertices);
 	void diskTriangulated(Vec2 pos, f32 radius, Vec4 color);
@@ -65,7 +67,9 @@ struct Gfx2d {
 	void filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec4 color);
 	void filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec3 color);
 	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color, i32 endpointVertices);
+	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec4 color, i32 endpointVertices);
 	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color);
+	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec4 color);
 
 	void drawCircles();
 	void drawLines();
