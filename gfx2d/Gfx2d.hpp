@@ -8,6 +8,7 @@
 #include <gfx2d/Shaders/diskData.hpp>
 #include <gfx2d/Shaders/filledTriangleData.hpp>
 #include <gfx2d/Camera.hpp>
+#include <gfx2d/FontRendering/FontRenderer.hpp>
 #include <List.hpp>
 
 struct Gfx2d {
@@ -80,6 +81,8 @@ struct Gfx2d {
 
 	f32 getQuadPixelSizeY(f32 scale);
 	i32 calculateCircleVertexCount(f32 radius) const;
+
+	FontRenderer fontRenderer;
 
 	Camera camera;
 

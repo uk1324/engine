@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Types.hpp>
+#include "View.hpp"
+#include <engine/Math/Vec2.hpp>
 
 template<typename T>
 struct View2d {
@@ -32,6 +33,17 @@ private:
 //	return MatrixView<T>(matrix.data(), matrix.sizeX(), matrix.sizeY());
 //}
 // If you didn't use a struct I guess you would need to pass const T* anyway.
+
+template<typename T>
+View<T> view(View2d<T> v) {
+	return View<T>(v.data(), v.sizeX() * v.sizeY());
+}
+
+
+template<typename T>
+View<const T> constView(View2d<const T> v) {
+	return View<const T>(v.data(), v.sizeX() * v.sizeY());
+}
 
 
 template<typename T>

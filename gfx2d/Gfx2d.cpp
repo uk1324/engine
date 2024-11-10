@@ -24,6 +24,8 @@ Gfx2d Gfx2d::make() {
 	auto filledTrianglesIbo = Ibo::generate();
 	auto filledTrianglesVao = createInstancingVao<FilledTriangleShader>(filledTrianglesVbo, filledTrianglesIbo, instancesVbo);
 
+	auto fontRenderer = FontRenderer(quad2dPtVbo, quad2dPtIbo, instancesVbo);
+
 	return Gfx2d{
 		MOVE(quad2dPtVbo),
 		MOVE(quad2dPtIbo),
@@ -42,6 +44,7 @@ Gfx2d Gfx2d::make() {
 		MOVE(filledTrianglesIbo),
 		MOVE(filledTrianglesVao),
 		.filledTriangleShader = MAKE_GENERATED_SHADER(FILLED_TRIANGLE),
+		MOVE(fontRenderer),
 		MOVE(instancesVbo),
 	};
 }

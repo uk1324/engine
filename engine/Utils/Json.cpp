@@ -16,6 +16,21 @@ Json::Value toJson(const Vec2& value) {
 	return json;
 }
 
+Json::Value toJson(const Vec2T<int>& value) {
+	auto json = Json::Value::emptyObject();
+	json["x"] = Json::Value::IntType(value.x);
+	json["y"] = Json::Value::IntType(value.y);
+	return json;
+}
+
+template<>
+Vec2T<int> fromJson<Vec2T<int>>(const Json::Value& json) {
+	return Vec2T<int>{
+		int(json.at("x").intNumber()),
+		int(json.at("y").intNumber()),
+	};
+}
+
 template<>
 Vec3 fromJson<Vec3>(const Json::Value& json) {
 	return Vec3{
