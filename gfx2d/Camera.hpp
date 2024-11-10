@@ -24,6 +24,6 @@ struct Camera {
 
 	Vec2 pos;
 	float zoom;
-	// Aspect ratio should be width / height.
+	// Aspect ratio should be width / height = x / y.
 	float aspectRatio;
 };

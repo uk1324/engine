@@ -291,6 +291,13 @@ void Gfx2d::polygonTriangulated(View<const Vec2> vertices, f32 width, Vec3 color
 	polygonTriangulated(vertices, width, color, calculateCircleVertexCount(width / 2.0f) / 2);
 }
 
+void Gfx2d::filledTriangle(Vec2 v0, Vec2 v1, Vec2 v2, Vec3 color) {
+	const auto i0 = addFilledTriangleVertex(v0, Vec4(color, 1.0f));
+	const auto i1 = addFilledTriangleVertex(v1, Vec4(color, 1.0f));
+	const auto i2 = addFilledTriangleVertex(v2, Vec4(color, 1.0f));
+	addFilledTriangle(i0, i1, i2);
+}
+
 void Gfx2d::filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec4 color) {
 	const auto offset = filledTrianglesVertices.size();
 	for (i64 i = 0; i < vertices.size(); i++) {
@@ -304,6 +311,16 @@ void Gfx2d::filledTriangles(View<const Vec2> vertices, View<const i32> indices, 
 
 void Gfx2d::filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec3 color) {
 	filledTriangles(vertices, indices, Vec4(color, 1.0f));
+}
+
+void Gfx2d::filledRect(Vec2 center, Vec2 size, Vec3 color) {
+	const auto halfSize = size / 2.0f;
+	const auto i0 = addFilledTriangleVertex(center + halfSize, Vec4(color, 1.0f));
+	const auto i1 = addFilledTriangleVertex(center + Vec2(halfSize.x, -halfSize.y), Vec4(color, 1.0f));
+	const auto i2 = addFilledTriangleVertex(center - halfSize, Vec4(color, 1.0f));
+	const auto i3 = addFilledTriangleVertex(center + Vec2(-halfSize.x, halfSize.y), Vec4(color, 1.0f));
+	addFilledTriangle(i0, i1, i2);
+	addFilledTriangle(i0, i2, i3);
 }
 
 void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color, i32 endpointVertices) {
