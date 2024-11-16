@@ -25,9 +25,6 @@ float getD(vec2 p) {
 void main() {
 	float smoothingWidth = min(smoothing, 0.49);
 	float d = getD(texturePosition).r;
-	float d0 = getD(texturePosition - vec2(offset)).r;
-	float d1 = getD(texturePosition + vec2(offset)).r;
-	vec3 col = d0 * vec3(0.0, 1.0, 1.0) + d1 * vec3(0.0, 0.0, 1.0) + d * vec3(1.0);
-	fragColor = vec4(col, max(d0, d1));
-	//fragColor = vec4(1.0);
+	vec3 col = vec3(d);
+	fragColor = vec4(col, d);
 }

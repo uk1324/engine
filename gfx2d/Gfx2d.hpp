@@ -68,6 +68,7 @@ struct Gfx2d {
 	void filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec4 color);
 	void filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec3 color);
 	void filledRect(Vec2 center, Vec2 size, Vec3 color);
+	void filledRect(Vec2 center, Vec2 size, Vec4 color);
 	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color, i32 endpointVertices);
 	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec4 color, i32 endpointVertices);
 	void lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color);

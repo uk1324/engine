@@ -20,6 +20,8 @@ public:
 	T& operator[](i64 index);
 	const T& operator[](i64 index) const;
 
+	const T& fromBack(i64 index) const;
+
 	//T* data() -> T*;
 	//auto data() const -> const T*;
 	i64 size() const;
@@ -178,6 +180,11 @@ T& View<T>::operator[](i64 index) {
 template<typename T>
 const T& View<T>::operator[](i64 index) const {
 	return const_cast<View<T>&>(*this)[index];
+}
+
+template<typename T>
+const T& View<T>::fromBack(i64 index) const {
+	return operator[](size_ - index);
 }
 
 template<typename T>

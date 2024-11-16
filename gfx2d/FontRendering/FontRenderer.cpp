@@ -85,7 +85,7 @@ Vec2 FontRenderer::addCharacterToDraw(
 			// This value is incorrect because it uses pixel size of the quad and not the size of the sdf outline. This looks good enough, but might vary between fonts.
 			.smoothing = 15.0f / pixelSize,
 			.color = color
-			});
+		});
 	}
 
 	// Advance values are stored as 1/64 of a pixel.
