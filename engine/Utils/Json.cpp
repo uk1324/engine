@@ -72,10 +72,15 @@ std::string fromJson<std::string>(const Json::Value& json) {
 	return json.string();
 }
 
-Json::Value toJson(const std::string& value) {
-	return Json::Value(value);
+template<>
+i32 fromJson<i32>(const Json::Value& json) {
+	return json.intNumber();
 }
 
 Json::Value toJson(i32 value) {
 	return Json::Value(Json::Value::IntType(value));
+}
+
+Json::Value toJson(const std::string& value) {
+	return Json::Value(value);
 }

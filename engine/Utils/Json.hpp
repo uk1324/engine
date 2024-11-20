@@ -31,6 +31,10 @@ template<>
 std::string fromJson<std::string>(const Json::Value& json);
 Json::Value toJson(const std::string& value);
 
+template<>
+i32 fromJson<i32>(const Json::Value& json);
+Json::Value toJson(i32 value);
+
 Json::Value toJson(i32 value);
 
 template<typename T>
