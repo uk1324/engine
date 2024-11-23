@@ -4,9 +4,71 @@
 #include <engine/Utils/JsonFileIo.hpp>
 #include <dependencies/ft2build.h>
 #include <engine/Utils/Json.hpp>
+#include <Utf8.hpp>
 #include FT_FREETYPE_H  
+#include <gfx2d/Camera.hpp>
 #include <filesystem>
 #include <fstream>
+#include <engine/Log.hpp>
+
+Font Font::loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension) {
+	const auto fontPath = std::string(directory) + "/" + std::string(fontName) + "." + std::string(extension);
+	const auto atlasPath = "cached/" + std::string(fontName) + ".png";
+	const auto infoPath = "cached/" + std::string(fontName) + ".json";
+
+	auto font = fontLoadSdfWithCaching(
+		fontPath.c_str(),
+		atlasPath.c_str(),
+		infoPath.c_str(),
+		ASCII_CHARACTER_RANGES,
+		64
+	);
+	//put("font loading took %", timer.elapsedMilliseconds());
+	if (font.has_value()) {
+		return std::move(*font);
+	}
+	Log::fatal("failed to load font: %", font.error().message.c_str());
+}
+
+TextInfo Font::textInfo(float maxHeight, std::string_view text) const {
+	const auto scale = maxHeight * (1.0f / pixelHeight);
+
+	float width = 0.0f;
+	float minY = std::numeric_limits<float>::infinity();
+	float maxY = 0.0f;
+
+	const char* current = text.data();
+	const char* end = text.data() + text.size();
+	while (const auto codepoint = Utf8::readCodePoint(current, end)) {
+		current = codepoint->next;
+		const auto& characterIt = glyphs.find(codepoint->codePoint);
+		if (characterIt == glyphs.end()) {
+			continue;
+		}
+		const auto& info = characterIt->second;
+		const auto advance = (info.advance.x >> 6) * scale;
+		width += advance;
+		const auto bottomY = -(info.visibleSize.y - info.visibleBearing.y);
+		const auto topY = bottomY + info.visibleSize.y;
+		minY = std::min(minY, bottomY * scale);
+		maxY = std::max(maxY, topY * scale);
+	}
+	// Don't have only add width istead of advance if it is the last character, because of how advance works.
+	// In the glyph metrics image you can see that the character is offset from the origin.
+	// https://learnopengl.com/In-Practice/Text-Rendering
+	// This might not be correct, but I think it is.
+	// You can test it works by for example writing "oo"
+
+	float height = maxY - minY;
+	if (isnan(height)) {
+		height = 0.0f;
+	}
+
+	return TextInfo{
+		.size = Vec2(width, height),
+		.bottomY = minY
+	};
+}
 
 Json::Value toJson(char32_t v) {
 	return Json::Value(std::to_string(v));
@@ -212,4 +274,58 @@ std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 
 bool Glyph::isVisible() const {
 	return visibleSize.x > 0 && visibleSize.y > 0;
+}
+
+TextRenderInfoIterator::TextRenderInfoIterator(
+	const Font& font,
+	Vec2 pos,
+	const Mat3x2& transform,
+	float maxHeight,
+	std::string_view text) 
+	: font(font)
+	, pos(pos)
+	, transform(transform)
+	, maxHeight(maxHeight)
+	, text(text) 
+	, currentInText(text.data()) {
+
+}
+
+std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterator::characterRenderInfo(char32_t character) {
+	const auto& characterIt = font.glyphs.find(character);
+	if (characterIt == font.glyphs.end()) {
+		return std::nullopt;
+	}
+	const auto& info = characterIt->second;
+
+	float scale = maxHeight * (1.0f / font.pixelHeight);
+	auto centerPos = pos + Vec2(info.bearingRelativeToOffsetInAtlas.x, -(info.sizeInAtlas.y - info.bearingRelativeToOffsetInAtlas.y)) * scale;
+	const auto size = Vec2(info.sizeInAtlas) * scale;
+	centerPos += size / 2.0f;
+
+	std::optional<CharacterRenderInfo> result;
+	if (info.isVisible()) {
+		const auto characterTransform = makeObjectTransform(centerPos, 0.0f, size / 2.0f) * transform;
+		result = CharacterRenderInfo{
+			.transform = characterTransform,
+			.offsetInAtlas = Vec2(info.offsetInAtlas) / Vec2(font.fontAtlasPixelSize),
+			.sizeInAtlas = Vec2(info.sizeInAtlas) / Vec2(font.fontAtlasPixelSize),
+		};
+	}
+
+	// Advance values are stored as 1/64 of a pixel.
+	pos = Vec2(pos.x + (info.advance.x >> 6) * scale, pos.y);
+	return result;
+}
+
+std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterator::next() {
+	const char* end = text.data() + text.size();
+	while (const auto codepoint = Utf8::readCodePoint(currentInText, end)) {
+		currentInText = codepoint->next;
+		if (const auto charInfo = characterRenderInfo(codepoint->codePoint); charInfo.has_value()) {
+			return charInfo;
+		}
+	}
+
+	return std::nullopt;
 }

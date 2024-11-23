@@ -8,9 +8,7 @@ shader BasicText {
 		Vec2 sizeInAtlas;
 	};
 	fragInstance = {
-		float smoothing;
-		color color;
-		float offset;
+		Vec4 color;
 	};
 	vertOut = {
 		Vec2 texturePosition;

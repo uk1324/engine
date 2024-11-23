@@ -41,15 +41,49 @@ static constexpr std::pair<char32_t, char32_t> POLISH_CHARACTER_RANGES[]{
 	{ 0x20AC, 0x20AC },
 };
 
+struct TextInfo {
+	Vec2 size;
+	float bottomY;
+};
+
 struct Font {
 	struct LoadError {
 		std::string message;
 	};
 
+	static Font loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension = "ttf");
+	TextInfo textInfo(float maxHeight, std::string_view text) const;
+
 	int pixelHeight;
 	Texture fontAtlas;
 	Vec2T<int> fontAtlasPixelSize;
 	std::unordered_map<char32_t, Glyph> glyphs;
+};
+
+struct TextRenderInfoIterator {
+	TextRenderInfoIterator(
+		const Font& font,
+		Vec2 pos, 
+		const Mat3x2& transform,
+		float maxHeight,
+		std::string_view text);
+
+	const Font& font;
+	Vec2 pos;
+	const Mat3x2& transform;
+	float maxHeight;
+	std::string_view text;
+
+	const char* currentInText;
+
+	struct CharacterRenderInfo {
+		Mat3x2 transform;
+		Vec2 offsetInAtlas;
+		Vec2 sizeInAtlas;
+	};
+	std::optional<CharacterRenderInfo> characterRenderInfo(char32_t character);
+
+	std::optional<CharacterRenderInfo> next();
 };
 
 // The font info is cached so when it changes it knows it needs to reload the sdf. It might be simpler to just store the ranges and read the info from the font file. Haven't though about it much it might not work idk.

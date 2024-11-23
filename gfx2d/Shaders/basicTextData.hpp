@@ -1,6 +1,5 @@
 #pragma once
 #include <engine/Math/Vec2.hpp> 
-#include <engine/Math/Vec4.hpp> 
 #include <engine/Graphics/ShaderProgram.hpp> 
 #include <vector> 
 #include <engine/Graphics/Vao.hpp> 
@@ -9,9 +8,7 @@ struct BasicTextInstance {
     Mat3x2 transform; 
     Vec2 offsetInAtlas; 
     Vec2 sizeInAtlas; 
-    float smoothing; 
     Vec4 color; 
-    float offset; 
 };
 
 
