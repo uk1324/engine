@@ -33,18 +33,19 @@ Vec2T<int> fromJson<Vec2T<int>>(const Json::Value& json) {
 
 template<>
 Vec3 fromJson<Vec3>(const Json::Value& json) {
-	return Vec3{
-		json.at("x").number(),
-		json.at("y").number(),
-		json.at("z").number(),
-	};
+	return Vec3(
+		json.at(0).number(),
+		json.at(1).number(),
+		json.at(2).number()
+	);
 }
 
 Json::Value toJson(const Vec3& value) {
-	auto json = Json::Value::emptyObject();
-	json["x"] = value.x;
-	json["y"] = value.y;
-	json["z"] = value.z;
+	auto json = Json::Value::emptyArray();
+	auto& array = json.array();
+	array.push_back(value.x);
+	array.push_back(value.y);
+	array.push_back(value.z);
 	return json;
 }
 
