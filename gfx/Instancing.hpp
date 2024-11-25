@@ -29,7 +29,7 @@ static void drawInstances(Vao& vao, Vbo& instancesVbo, const View<const Instance
 	const auto maxInstancesPerDrawCall = i32(instanceBufferSize / sizeof(Instance));
 	i32 drawn = 0;
 	while (drawn < instances.size()) {
-		const auto leftToDraw = instances.size() - drawn;
+		const auto leftToDraw = i32(instances.size()) - drawn;
 		const auto toDrawInThisDrawCall = (leftToDraw > maxInstancesPerDrawCall) ? maxInstancesPerDrawCall : leftToDraw;
 		boundVboSetData(0, instances.data() + drawn, toDrawInThisDrawCall * sizeof(Instance));
 		drawFunction(toDrawInThisDrawCall);

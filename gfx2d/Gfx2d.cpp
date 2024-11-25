@@ -52,7 +52,7 @@ Gfx2d Gfx2d::make() {
 i32 Gfx2d::addFilledTriangleVertex(Vec2 pos, Vec4 color) {
 	const auto index = filledTrianglesVertices.size();
 	filledTrianglesVertices.add(Vertex2Pc{ .position = pos, .color = color });
-	return index;
+	return i32(index);
 }
 
 void Gfx2d::addFilledTriangle(u32 i0, u32 i1, u32 i2) {
@@ -246,7 +246,7 @@ void Gfx2d::polygon(View<const Vec2> vertices, f32 width, Vec3 color) {
 		return;
 	}
 
-	int previous = vertices.size() - 1;
+	int previous = int(vertices.size() - 1);
 	for (int i = 0; i < vertices.size(); previous = i, i++) {
 		line(vertices[previous], vertices[i], width, color);
 		previous = i;
@@ -258,7 +258,7 @@ void Gfx2d::polyline(View<const Vec2> vertices, f32 width, Vec3 color) {
 		return;
 	}
 	for (i32 i = 1; i < vertices.size(); i++) {
-		line(vertices[i - 1], vertices[i], width, color);
+		line(vertices[i64(i) - 1], vertices[i], width, color);
 	}
 }
 
@@ -267,7 +267,7 @@ void Gfx2d::polylineTriangulated(View<const Vec2> vertices, f32 width, Vec3 colo
 		return;
 	}
 	for (i32 i = 1; i < vertices.size(); i++) {
-		lineTriangulated(vertices[i - 1], vertices[i], width, color, endpointVertices);
+		lineTriangulated(vertices[i64(i) - 1], vertices[i], width, color, endpointVertices);
 	}
 }
 
@@ -303,12 +303,12 @@ void Gfx2d::filledTriangle(Vec2 v0, Vec2 v1, Vec2 v2, Vec3 color) {
 }
 
 void Gfx2d::filledTriangles(View<const Vec2> vertices, View<const i32> indices, Vec4 color) {
-	const auto offset = filledTrianglesVertices.size();
-	for (i64 i = 0; i < vertices.size(); i++) {
+	const auto offset = i32(filledTrianglesVertices.size());
+	for (i32 i = 0; i < vertices.size(); i++) {
 		filledTrianglesVertices.add(Vertex2Pc{ .position = vertices[i], .color = color });
 	}
 
-	for (i64 i = 0; i < indices.size(); i++) {
+	for (i32 i = 0; i < indices.size(); i++) {
 		filledTrianglesIndices.add(offset + indices[i]);
 	}
 }
@@ -416,7 +416,7 @@ void Gfx2d::drawFilledTriangles() {
 		.transform = camera.clipSpaceToWorldSpace().inversed()
 	});
 
-	glDrawElements(GL_TRIANGLES, filledTrianglesIndices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, GLsizei(filledTrianglesIndices.size()), GL_UNSIGNED_INT, nullptr);
 
 	filledTrianglesIndices.clear();
 	filledTrianglesVertices.clear();
