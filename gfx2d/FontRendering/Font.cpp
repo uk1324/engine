@@ -30,7 +30,7 @@ Font Font::loadSdfWithCachingAtDefaultPath(std::string_view directory, std::stri
 	Log::fatal("failed to load font: %", font.error().message.c_str());
 }
 
-TextInfo Font::textInfo(float maxHeight, std::string_view text) const {
+TextInfo Font::textInfo(float maxHeight, std::string_view text, f32 additionalSpacing) const {
 	const auto scale = maxHeight * (1.0f / pixelHeight);
 
 	float width = 0.0f;
@@ -46,7 +46,7 @@ TextInfo Font::textInfo(float maxHeight, std::string_view text) const {
 			continue;
 		}
 		const auto& info = characterIt->second;
-		const auto advance = (info.advance.x >> 6) * scale;
+		const auto advance = (info.advance.x >> 6) * scale + additionalSpacing;
 		width += advance;
 		const auto bottomY = -(info.visibleSize.y - info.visibleBearing.y);
 		const auto topY = bottomY + info.visibleSize.y;
@@ -281,13 +281,15 @@ TextRenderInfoIterator::TextRenderInfoIterator(
 	Vec2 pos,
 	const Mat3x2& transform,
 	float maxHeight,
-	std::string_view text) 
+	std::string_view text,
+	f32 additionalSpacing)
 	: font(font)
 	, pos(pos)
 	, transform(transform)
 	, maxHeight(maxHeight)
 	, text(text) 
-	, currentInText(text.data()) {
+	, currentInText(text.data())
+	, additionalSpacing(additionalSpacing) {
 
 }
 
@@ -314,7 +316,7 @@ std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterato
 	}
 
 	// Advance values are stored as 1/64 of a pixel.
-	pos = Vec2(pos.x + (info.advance.x >> 6) * scale, pos.y);
+	pos = Vec2(pos.x + (info.advance.x >> 6) * scale + additionalSpacing, pos.y);
 	return result;
 }
 

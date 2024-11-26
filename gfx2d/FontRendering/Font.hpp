@@ -52,7 +52,7 @@ struct Font {
 	};
 
 	static Font loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension = "ttf");
-	TextInfo textInfo(float maxHeight, std::string_view text) const;
+	TextInfo textInfo(float maxHeight, std::string_view text, f32 additionalSpacing = 0.0f) const;
 
 	int pixelHeight;
 	Texture fontAtlas;
@@ -66,13 +66,15 @@ struct TextRenderInfoIterator {
 		Vec2 pos, 
 		const Mat3x2& transform,
 		float maxHeight,
-		std::string_view text);
+		std::string_view text,
+		f32 additionalSpacing = 0.0f);
 
 	const Font& font;
 	Vec2 pos;
 	const Mat3x2& transform;
 	float maxHeight;
 	std::string_view text;
+	f32 additionalSpacing;
 
 	const char* currentInText;
 
