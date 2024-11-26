@@ -184,7 +184,7 @@ const T& View<T>::operator[](i64 index) const {
 
 template<typename T>
 const T& View<T>::fromBack(i64 index) const {
-	return operator[](size_ - index);
+	return operator[](size_ + index);
 }
 
 template<typename T>

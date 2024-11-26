@@ -3,8 +3,9 @@
 #include <iostream>
 #include "AL/al.h"
 #include "AudioErrorHandling.hpp"
-#include <stb_vorbis/stb_vorbis.h>
+#include <stb_vorbis/stb_vorbis.hpp>
 #include "Assertions.hpp"
+#include <optional>
 
 AudioBuffer::AudioBuffer(AudioBuffer&& other) noexcept {
     handle_ = other.handle_;

@@ -6,8 +6,7 @@
 #include <string.h>
 
 bool assertImplementation(bool condition, const char* functionName, int line) {
-	return false;
-	/*if (condition) {
+	if (condition) {
 		return !condition;
 	}
 	#ifndef FINAL_RELEASE
@@ -26,7 +25,7 @@ bool assertImplementation(bool condition, const char* functionName, int line) {
 	exit(EXIT_FAILURE);
 	#endif
 
-	return !condition;*/
+	return !condition;
 }
 
 void assertNotReachedImplementation(const char* functionName, int line) {
