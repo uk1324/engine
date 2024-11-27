@@ -9,10 +9,10 @@ TextureAtlasResult generateTextureAtlas(std::vector<TextureAtlasInputImage>& tex
 	int combinedArea = 0;
 	int maxWidth = -1;
 	for (const auto& texture : textures) {
-		combinedArea += texture.image.width() * texture.image.height();
+		combinedArea += int(texture.image.width()) * int(texture.image.height());
 		const auto width = texture.image.width();
 		if (width > maxWidth) {
-			maxWidth = width;
+			maxWidth = int(width);
 		}
 	}
 
@@ -41,7 +41,7 @@ TextureAtlasResult generateTextureAtlas(std::vector<TextureAtlasInputImage>& tex
 		const auto width = texture.image.width() + PADDING_TO_PREVENT_BLEEDING;
 		const auto height = texture.image.height() + PADDING_TO_PREVENT_BLEEDING;
 		if (height > maxHeightInRow) {
-			maxHeightInRow = height;
+			maxHeightInRow = int(height);
 		}
 
 		if (currentXOffset + width < outputWidth) {
@@ -50,7 +50,7 @@ TextureAtlasResult generateTextureAtlas(std::vector<TextureAtlasInputImage>& tex
 				.size = Vec2T<int>(texture.image.width(), texture.image.height())
 			};
 			textureNameToPos.insert({ texture.name, Pos{.index = i, .pos = pos } });
-			currentXOffset += width;
+			currentXOffset += int(width);
 			i++;
 		} else {
 			rowYOffset += maxHeightInRow;

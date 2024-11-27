@@ -60,7 +60,7 @@ void boundVaoSetAttribute(u32 index, ShaderDataType dataType, u32 dataTypeCountP
 		dataTypeCountPerVertex,
 		static_cast<GLenum>(dataType),
 		normalize,
-		stride,
+		GLsizei(stride),
 		reinterpret_cast<void*>(offset)
 	);
 }
@@ -70,7 +70,7 @@ void boundVaoSetIntAttribute(u32 index, ShaderDataType dataType, u32 dataTypeCou
 		index,
 		dataTypeCountPerVertex,
 		static_cast<GLenum>(dataType),
-		stride,
+		GLsizei(stride),
 		reinterpret_cast<void*>(offset)
 	);
 	glEnableVertexAttribArray(index);

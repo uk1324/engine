@@ -7,8 +7,8 @@
 auto isPointInPolygon(View<const Vec2> verts, Vec2 p) -> bool {
 	// Jordan curve theorem.
 	bool crossedOddTimes = false;
-	usize previous = verts.size() - 1;
-	for (usize i = 0; i < verts.size(); i++) {
+	i64 previous = verts.size() - 1;
+	for (i64 i = 0; i < verts.size(); i++) {
 		const auto& a = verts[previous];
 		const auto& b = verts[i];
 

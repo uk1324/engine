@@ -46,12 +46,13 @@ void ShaderManager::update() {
 			fragLastWriteTime = std::filesystem::last_write_time(shader.fragPath);
 			shader.unsuccessfulReloadTries = 0;
 		} catch (const std::filesystem::filesystem_error&) {
-			// Probably caused by the file being written to at the time.
-			shader.unsuccessfulReloadTries += 1;
-			if (shader.unsuccessfulReloadTries > 20) {
-				ASSERT_NOT_REACHED();
-			}
-			continue;
+			//// Probably caused by the file being written to at the time.
+			//shader.unsuccessfulReloadTries += 1;
+			//if (shader.unsuccessfulReloadTries > 40) {
+			//	ASSERT_NOT_REACHED();
+			//}
+			//continue;
+			return;
 		}
 
 		if (shader.vertPathLastWriteTime == vertLastWriteTime && shader.fragPathLastWriteTime == fragLastWriteTime) {

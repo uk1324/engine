@@ -231,7 +231,7 @@ void marchingSquares2(std::vector<MarchingSquaresLine>& output, View2d<const flo
 	for (i64 yi = 0; yi < grid.sizeY() - 1; yi++) {
 		for (i64 xi = 0; xi < grid.sizeX() - 1; xi++) {
 			auto add = [&output, &xi, &yi](Vec2 a, Vec2 b) {
-				output.push_back(MarchingSquaresLine{ a, b, Vec2T<i32>(xi, yi)});
+				output.push_back(MarchingSquaresLine{ a, b, Vec2T<i32>(i32(xi), i32(yi))});
 			};
 			/*
 			x, y+1 | x+1, y+1
@@ -356,7 +356,7 @@ void marchingSquares2(std::vector<MarchingSquaresLine>& output, View2d<const flo
 			// xo ox
 			case 0b1010:
 			case 0b0101:
-				add(Vec2(xi + 0.5 + lerpX(yi), yi + 0.5f), Vec2(xi + 0.5f + lerpX(yi + 1), yi + 1.5f));
+				add(Vec2(xi + 0.5f + lerpX(yi), yi + 0.5f), Vec2(xi + 0.5f + lerpX(yi + 1), yi + 1.5f));
 				break;
 
 			/*
@@ -412,15 +412,15 @@ void marchingSquares3(
 	for (i64 yi = 0; yi < grid.sizeY() - 1; yi++) {
 		for (i64 xi = 0; xi < grid.sizeX() - 1; xi++) {
 			auto add = [&linesOut, &xi, &yi](Vec2 a, Vec2 b) {
-				linesOut.push_back(MarchingSquares3Line{ a, b, Vec2T<i32>(xi, yi)});
+				linesOut.push_back(MarchingSquares3Line{ a, b, Vec2T<i32>(i32(xi), i32(yi))});
 			};
 			auto setLineIndexInGrid = [&]() {
-				gridCellToStoredLinesOut(xi, yi).line1Index = linesOut.size();
+				gridCellToStoredLinesOut(xi, yi).line1Index = i32(linesOut.size());
 				gridCellToStoredLinesOut(xi, yi).line2Index = MarchingSquaresGridCell::EMPTY;
 			};
 			auto setLineIndexInGridTwice = [&]() {
-				gridCellToStoredLinesOut(xi, yi).line1Index = linesOut.size();
-				gridCellToStoredLinesOut(xi, yi).line2Index = linesOut.size() + 1;
+				gridCellToStoredLinesOut(xi, yi).line1Index = i32(linesOut.size());
+				gridCellToStoredLinesOut(xi, yi).line2Index = i32(linesOut.size() + 1);
 			};
 
 			const auto configuration =
@@ -507,7 +507,7 @@ void marchingSquares3(
 			case 0b1010:
 			case 0b0101:
 				setLineIndexInGrid();
-				add(Vec2(xi + 0.5 + lerpX(yi), yi + 0.5f), Vec2(xi + 0.5f + lerpX(yi + 1), yi + 1.5f));
+				add(Vec2(xi + 0.5f + lerpX(yi), yi + 0.5f), Vec2(xi + 0.5f + lerpX(yi + 1), yi + 1.5f));
 				break;
 
 			// xo
@@ -555,7 +555,7 @@ void rescaleMarchingSquaresLines(std::vector<MarchingSquares3Line>& lines, Vec2 
 }
 
 void marchingSquresLinesToVectorOfEndpoints(const std::vector<MarchingSquares3Line>& lines, std::vector<Vec2>& endpoints) {
-	for (const auto segment : lines) {
+	for (const auto& segment : lines) {
 		endpoints.push_back(segment.a);
 		endpoints.push_back(segment.b);
 	}

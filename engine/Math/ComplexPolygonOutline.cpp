@@ -11,7 +11,7 @@ std::optional<const std::vector<Vec2>&> complexPolygonOutline(View<const Vec2> v
 	const auto leftmostVertex = std::min_element(vertices.begin(), vertices.end(), [](Vec2 a, Vec2 b) { return a.x < b.x; }) - vertices.begin();
 	auto getIndex = [&](int i) -> int {
 		if (i < 0) {
-			i = vertices.size() - 1;
+			i = int(vertices.size() - 1);
 		}
 		if (i >= vertices.size()) {
 			i = 0;
@@ -24,7 +24,7 @@ std::optional<const std::vector<Vec2>&> complexPolygonOutline(View<const Vec2> v
 	};
 
 	// The leftmost index always lies on the shape's boundary. Any <direction>most point would do.
-	const int startIndex = leftmostVertex;
+	const int startIndex = int(leftmostVertex);
 	const auto a = get(startIndex - 1);
 	const auto b = get(startIndex);
 	const auto c = get(startIndex + 1);
@@ -65,7 +65,7 @@ std::optional<const std::vector<Vec2>&> complexPolygonOutline(View<const Vec2> v
 		int closestIntersectionLineStartIndex = 0;
 		int closestIntersectionLineEndIndex = 0;
 
-		int previousI = vertices.size() - 1;
+		int previousI = int(vertices.size()) - 1;
 		for (int i = 0; i < vertices.size(); previousI = i, i++) {
 			// Skip lines that share an endpoint with the ray.
 			if (ignored0.has_value()

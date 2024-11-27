@@ -126,7 +126,7 @@ void ShaderProgram::set(std::string_view name, const Mat4& value) {
 }
 
 void ShaderProgram::set(std::string_view name, std::span<const Vec2> vecs) {
-	glProgramUniform2fv(handle_, getUniformLocation(name.data()), vecs.size(), reinterpret_cast<const float*>(vecs.data()));
+	glProgramUniform2fv(handle_, getUniformLocation(name.data()), GLsizei(vecs.size()), reinterpret_cast<const float*>(vecs.data()));
 }
 
 GLuint ShaderProgram::handle() const {

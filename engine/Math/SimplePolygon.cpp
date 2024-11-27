@@ -11,7 +11,7 @@ auto simplePolygonSignedArea(View<const Vec2> verts) -> float {
 	}
 	auto twiceTheSignedArea = 0.0f;
 	auto previous = verts.size() - 1;
-	for (usize i = 1; i < verts.size(); i++) {
+	for (i64 i = 1; i < verts.size(); i++) {
 		twiceTheSignedArea += (verts[i].x - verts[previous].x) * (verts[i].y + verts[previous].y);
 		previous = i;
 	}

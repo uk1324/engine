@@ -331,7 +331,7 @@ const Json::Value& Json::Value::at(const StringType& key) const
 Json::Value& Json::Value::at(IntType key)
 {
 	Json::Value::ArrayType& arr = array();
-	if ((key < 0) || (key >= arr.size()))
+	if ((key < 0) || (key >= Json::Value::IntType(arr.size())))
 		throw OutOfRangeAccess();
 	return arr[key];
 }
@@ -339,7 +339,7 @@ Json::Value& Json::Value::at(IntType key)
 const Json::Value& Json::Value::at(IntType key) const
 {
 	const Json::Value::ArrayType& arr = array();
-	if ((key < 0) || (key >= arr.size()))
+	if ((key < 0) || (key >= Json::Value::IntType(arr.size())))
 		throw OutOfRangeAccess();
 	return arr[key];
 }

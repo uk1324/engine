@@ -75,7 +75,7 @@ std::string fromJson<std::string>(const Json::Value& json) {
 
 template<>
 i32 fromJson<i32>(const Json::Value& json) {
-	return json.intNumber();
+	return i32(json.intNumber());
 }
 
 Json::Value toJson(i32 value) {
