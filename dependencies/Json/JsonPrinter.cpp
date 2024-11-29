@@ -58,6 +58,19 @@ static void printIndentation(std::ostream& os, int count)
 		os << "    ";
 }
 
+static void printFloat(std::ostream& os, Json::Value::FloatType f) {
+	char buffer[256];
+	const auto result = std::to_chars(buffer, buffer + std::size(buffer), f);
+	if (result.ec != std::errc()) {
+		// Shouldn't happen. 
+		// Fallback to regular printing.
+		os << f;
+		return;
+	}
+	std::string_view str(buffer, result.ptr - buffer);
+	os << str;
+}
+
 static void prettyPrintImplementation(std::ostream& os, const Json::Value& value, int depth)
 {
 	switch (value.type())
@@ -66,7 +79,7 @@ static void prettyPrintImplementation(std::ostream& os, const Json::Value& value
 			os << value.intNumber();
 			break;
 		case Json::Value::Type::Float:
-			os << value.floatNumber();
+			printFloat(os, value.floatNumber());
 			break;
 		case Json::Value::Type::Null:
 			os << "null";
@@ -164,7 +177,7 @@ static void printImplementation(std::ostream& os, const Json::Value& value)
 		os << value.intNumber();
 		break;
 	case Json::Value::Type::Float:
-		os << value.floatNumber();
+		printFloat(os, value.floatNumber());
 		break;
 	case Json::Value::Type::Null:
 		os << "null";
