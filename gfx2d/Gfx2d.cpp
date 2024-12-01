@@ -435,6 +435,11 @@ void Gfx2d::drawDebug() {
 		Gfx2d::line(line.e0, line.e1, line.width, line.color);
 	}
 	drawLines();
+
+	for (const auto& arc : Dbg::circleArcs) {
+		Gfx2d::circleArcTriangulated(arc.center, arc.radius, arc.angleStart, arc.angleEnd, arc.width, Vec4(arc.color));
+	}
+	drawFilledTriangles();
 #endif
 	Dbg::update();
 }

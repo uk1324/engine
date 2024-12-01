@@ -1,9 +1,7 @@
 #pragma once
 
-template<typename T>
-constexpr T PI = static_cast<T>(3.14159265359);
-template<typename T>
-constexpr T TAU = PI<T> *static_cast<T>(2.0);
+#include <Types.hpp>
+#include "Constants.hpp"
 
 template<typename T>
 auto degToRad(T s) -> T {
@@ -27,3 +25,11 @@ T normalizeAngleZeroToTau(T angle) {
 		angle += TAU<float>;
 	return angle;
 }
+
+f32 angleToRangeZeroTau(f32 a);
+
+struct AngleRange {
+	f32 min, max;
+
+	bool isInRange(f32 angle) const;
+};
