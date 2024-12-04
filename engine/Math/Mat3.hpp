@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec3.hpp"
+#include <Assertions.hpp>
 
 template<typename T>
 struct Mat3T {
@@ -15,6 +16,9 @@ struct Mat3T {
 
 	const Vec3T<T>& operator[](i32 i) const;
 	Vec3T<T>& operator[](i32 i);
+
+	const T* data() const;
+	T* data();
 
 	Vec3T<T> basis[3];
 };
@@ -84,6 +88,16 @@ template<typename T>
 Vec3T<T>& Mat3T<T>::operator[](i32 i) {
 	CHECK(i >= 0 && i <= 2);
 	return basis[i];
+}
+
+template<typename T>
+const T* Mat3T<T>::data() const {
+	return reinterpret_cast<const float*>(basis);
+}
+
+template<typename T>
+T* Mat3T<T>::data() {
+	return reinterpret_cast<float*>(basis);
 }
 
 template<typename T>

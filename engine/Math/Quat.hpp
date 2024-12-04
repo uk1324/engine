@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec3.hpp"
+#include "Mat3.hpp"
 
 template<typename T>
 struct QuatT {
@@ -13,6 +14,8 @@ struct QuatT {
 	QuatT conjugate() const;
 	// Rotations are by definition normalized.
 	QuatT inverseIfNormalized() const;
+
+	Mat3T<T> toMatrix() const;
 
 	const static QuatT identity;
 
@@ -67,6 +70,16 @@ QuatT<T> QuatT<T>::conjugate() const {
 template<typename T>
 QuatT<T> QuatT<T>::inverseIfNormalized() const {
 	return conjugate();
+}
+
+template<typename T>
+Mat3T<T> QuatT<T>::toMatrix() const {
+	// TODO: This may need to be transposed.
+	return Mat3T<T>(
+		Vec3(1 - 2 * y * y - 2 * z * z, 2 * x * y - 2 * z * w, 2 * x * z + 2 * y * w),
+		Vec3(2 * x * y + 2 * z * w, 1 - 2 * x * x - 2 * z * z, 2 * y * z - 2 * x * w),
+		Vec3(2 * x * z - 2 * y * w, 2 * y * z + 2 * x * w, 1 - 2 * x * x - 2 * y * y)
+	);
 }
 
 template<typename T>

@@ -56,6 +56,7 @@ public:
 	void set(std::string_view name, float value);
 	void set(std::string_view name, bool value);
 	void set(std::string_view name, const Mat3x2& value);
+	void set(std::string_view name, const Mat3& value);
 	void set(std::string_view name, const Mat4& value);
 	void set(std::string_view name, std::span<const Vec2> vecs);
 

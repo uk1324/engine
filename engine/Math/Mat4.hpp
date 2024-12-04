@@ -6,7 +6,7 @@
 template<typename T>
 struct Mat4T {
 	constexpr Mat4T(const Vec4T<T>& x, const Vec4T<T>& y, const Vec4T<T>& z, const Vec4T<T>& w);
-	constexpr Mat4T(const Mat3T<T>& m);
+	explicit constexpr Mat4T(const Mat3T<T>& m);
 
 	// Using a target instead of direction seems more general. If you already have a direction the code to create a target is more easily readable than the code for creating the direciton if you have position and target.
 	static Mat4T translation(const Vec3T<T>& position);

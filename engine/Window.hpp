@@ -35,6 +35,8 @@ namespace Window {
 
 	void enableWindowedFullscreen();
 
+	void setFullscreen(bool fullscreen);
+
 	void disableCursor();
 	void enableCursor();
 	void toggleCursor();

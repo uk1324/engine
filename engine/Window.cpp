@@ -50,7 +50,13 @@ void Window::init(const Settings& settings) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Engine::openGlVersionMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Engine::openGlVersionMinor);
 
+	
+	//const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	///*window_width = mode->width;
+	//window_height = mode->height;*/
+
 	windowHandle = glfwCreateWindow(settings.width, settings.height, settings.title, nullptr, nullptr);
+	//windowHandle = glfwCreateWindow(mode->width, mode->height, settings.title, glfwGetPrimaryMonitor(), nullptr);
 	if (windowHandle == nullptr) {
 		Log::fatal("failed to create window");
 	}
@@ -127,6 +133,42 @@ void Window::enableWindowedFullscreen() {
 	//        glfwMaximizeWindow(engine.window().handle());
 	//    }dsfsdfdsffvfdgwdwdwd
 	glfwMaximizeWindow(windowHandle);
+}
+
+struct BeforeFullscreen {
+	int posX;
+	int posY;
+	int sizeX;
+	int sizeY;
+};
+
+static std::optional<BeforeFullscreen> beforeFullscreen;
+
+void Window::setFullscreen(bool fullscreen) {
+	auto isFullscreenEnabled = []() {
+		return glfwGetWindowMonitor(windowHandle) != nullptr;
+	};
+
+	if (isFullscreenEnabled() == fullscreen) {
+		return;
+	}
+
+	if (fullscreen) {
+		BeforeFullscreen b;
+		glfwGetWindowPos(windowHandle, &b.posX, &b.posY);
+		glfwGetWindowSize(windowHandle, &b.sizeX, &b.sizeY);
+		beforeFullscreen = b;
+		const auto monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		glfwSetWindowMonitor(windowHandle, monitor, 0, 0, mode->width, mode->height, 0);
+	} else {
+		if (beforeFullscreen.has_value()) {
+			glfwSetWindowMonitor(windowHandle, nullptr, beforeFullscreen->posX, beforeFullscreen->posY, beforeFullscreen->sizeX, beforeFullscreen->sizeY, 0);
+		} else {
+			// Just to be safe. Normally the window is lauched the set to fullscren. So you can just set the size before setting to fullscreen.
+			glfwSetWindowMonitor(windowHandle, nullptr, 0, 0, 600, 480, 0);
+		}
+	}
 }
 
 void Window::disableCursor() {

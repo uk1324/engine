@@ -2,6 +2,7 @@
 
 #include <ostream>
 #include <sstream>
+#include <charconv>
 
 static void escapeString(std::ostream& os, const Json::Value::StringType string)
 {

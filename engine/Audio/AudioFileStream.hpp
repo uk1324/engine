@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stb_vorbis/stb_vorbis.h>
+#include <stb_vorbis/stb_vorbis.hpp>
 #include "AudioSource.hpp"
 #include <array>
 
