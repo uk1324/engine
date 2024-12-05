@@ -13,8 +13,14 @@
 std::optional<std::string> tryLoadStringFromFile(std::string_view path) {
 	std::ifstream file(path.data(), std::ios::binary);
 
-	if (file.fail())
+	auto printFileReadError = [&]() {
+		std::cerr << "Failed to read file '" << path << "' | " << strerror(errno);;
+	};
+
+	if (file.fail()) {
+		printFileReadError();
 		return std::nullopt;
+	}
 
 	auto start = file.tellg();
 	file.seekg(0, std::ios::end);
@@ -27,8 +33,10 @@ std::optional<std::string> tryLoadStringFromFile(std::string_view path) {
 	result.resize(fileSize);
 
 	file.read(result.data(), fileSize);
-	if (file.fail())
+	if (file.fail()) {
+		printFileReadError();
 		return std::nullopt;
+	}
 
 	return result;
 }
