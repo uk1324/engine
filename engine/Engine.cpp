@@ -83,7 +83,7 @@ static void openGlErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 }
 
-void Engine::initAll(const Window::Settings& windowSettings, const char* imGuiFontPath) {
+void Engine::initAll(const Window::Settings& windowSettings, const char* imGuiFontPath, const char* imGuiIniPath) {
 	Timer timer;
 	put("Engine::init start");
 	initGlfw();
@@ -93,7 +93,7 @@ void Engine::initAll(const Window::Settings& windowSettings, const char* imGuiFo
 		put("Window::init took: %", timer.elapsedMilliseconds());
 	}
 	initOpenGl();
-	initImGui(imGuiFontPath);
+	initImGui(imGuiFontPath, imGuiIniPath);
 
 	put("Engine::init took: %", timer.elapsedMilliseconds());
 }
@@ -131,7 +131,7 @@ void Engine::initOpenGl() {
 	}
 }
 
-void Engine::initImGui(const char* fontPath) {
+void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 	IMGUI_CHECKVERSION();
 
 	ImGui::CreateContext();
@@ -144,7 +144,9 @@ void Engine::initImGui(const char* fontPath) {
 	auto& style = ImGui::GetStyle();
 	style.WindowRounding = 5.0f;
 
-	ImGui::GetIO().IniFilename = "./cached/imgui.ini";
+	if (imGuiIniPath != nullptr) {
+		ImGui::GetIO().IniFilename = imGuiIniPath;
+	}
 
 	ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(Window::handle()), true);
 	ImGui_ImplOpenGL3_Init("#version 430");

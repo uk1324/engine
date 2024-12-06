@@ -1,4 +1,4 @@
-https://freetype.org/download.html // sourceforge had the never version
+https://freetype.org/download.html // sourceforge had the newer version
 goto builds\windows\vc2010
 compile (remember to choose the right configuration x64 or x86 debug or release.
 the output directory is rootFolder/objs/x64/Debug (there is also another freetype.dll in another directory but I don't konw what that is)
