@@ -323,8 +323,10 @@ std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterato
 std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterator::next() {
 	const char* end = text.data() + text.size();
 	while (const auto codepoint = Utf8::readCodePoint(currentInText, end)) {
+		const auto indexInText = currentInText - text.data();
 		currentInText = codepoint->next;
-		if (const auto charInfo = characterRenderInfo(codepoint->codePoint); charInfo.has_value()) {
+		if (auto charInfo = characterRenderInfo(codepoint->codePoint); charInfo.has_value()) {
+			charInfo->indexInText = indexInText;
 			return charInfo;
 		}
 	}

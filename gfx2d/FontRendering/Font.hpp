@@ -82,6 +82,7 @@ struct TextRenderInfoIterator {
 		Mat3x2 transform;
 		Vec2 offsetInAtlas;
 		Vec2 sizeInAtlas;
+		i32 indexInText;
 	};
 	std::optional<CharacterRenderInfo> characterRenderInfo(char32_t character);
 
