@@ -9,11 +9,18 @@ struct QuatT {
 	QuatT(const T& angle, const Vec3T<T>& axis);
 
 	QuatT<T> operator* (const QuatT<T>& rhs) const;
+	QuatT<T> operator*= (const QuatT<T>& rhs);
 	Vec3T<T> operator* (const Vec3T<T>& rhs) const;
+
+	QuatT<T> operator/(f32 value) const;
 
 	QuatT conjugate() const;
 	// Rotations are by definition normalized.
 	QuatT inverseIfNormalized() const;
+
+	QuatT normalized() const;
+
+	T length() const;
 
 	Mat3T<T> toMatrix() const;
 
@@ -56,10 +63,20 @@ QuatT<T> QuatT<T>::operator*(const QuatT<T>& rhs) const {
 }
 
 template<typename T>
+QuatT<T> QuatT<T>::operator*=(const QuatT<T>& rhs) {
+	*this = rhs * *this;
+}
+
+template<typename T>
 Vec3T<T> QuatT<T>::operator*(const Vec3T<T>& rhs) const {
 	// https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
 	QuatT<T> q = (*this * QuatT<T>(rhs.x, rhs.y, rhs.z, 0)) * conjugate();
 	return Vec3T<T>(q.x, q.y, q.z);
+}
+
+template<typename T>
+QuatT<T> QuatT<T>::operator/(f32 value) const {
+	return QuatT<T>(x / value, y / value, z / value, w / value);
 }
 
 template<typename T>
@@ -70,6 +87,16 @@ QuatT<T> QuatT<T>::conjugate() const {
 template<typename T>
 QuatT<T> QuatT<T>::inverseIfNormalized() const {
 	return conjugate();
+}
+
+template<typename T>
+QuatT<T> QuatT<T>::normalized() const {
+	return *this / length();
+}
+
+template<typename T>
+T QuatT<T>::length() const {
+	return sqrt(x * x + y * y + z * z + w * w);
 }
 
 template<typename T>
