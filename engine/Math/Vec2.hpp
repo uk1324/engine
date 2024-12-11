@@ -164,7 +164,7 @@ auto Vec2T<T>::lengthSq() const -> T {
 
 template<typename T>
 auto Vec2T<T>::length() const -> T {
-	return sqrtf(lengthSq());
+	return std::sqrt(lengthSq());
 }
 
 template<typename T>

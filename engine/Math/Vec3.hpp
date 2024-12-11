@@ -153,7 +153,7 @@ Vec3T<T> Vec3T<T>::operator/(const Vec3T& v) {
 
 template<typename T>
 auto Vec3T<T>::length() const -> float {
-	return sqrt(x * x + y * y + z * z);
+	return std::sqrt(x * x + y * y + z * z);
 }
 
 template<typename T>

@@ -331,6 +331,21 @@ void Gfx2d::filledRect(Vec2 center, Vec2 size, Vec4 color) {
 	addFilledTriangle(i0, i2, i3);
 }
 
+void Gfx2d::filledRectRotated(Vec2 center, Vec2 size, f32 angle, Vec3 color) {
+	filledRectRotated(center, size, angle, Vec4(color, 1.0f));
+}
+
+void Gfx2d::filledRectRotated(Vec2 center, Vec2 size, f32 angle, Vec4 color) {
+	const auto halfSize = size / 2.0f;
+	Rotation rotation(angle);
+	const auto i0 = addFilledTriangleVertex(center + rotation * halfSize, color);
+	const auto i1 = addFilledTriangleVertex(center + rotation * Vec2(halfSize.x, -halfSize.y), color);
+	const auto i2 = addFilledTriangleVertex(center - rotation * halfSize, color);
+	const auto i3 = addFilledTriangleVertex(center + rotation * Vec2(-halfSize.x, halfSize.y), color);
+	addFilledTriangle(i0, i1, i2);
+	addFilledTriangle(i0, i2, i3);
+}
+
 void Gfx2d::lineTriangulated(Vec2 endpoint0, Vec2 endpoint1, f32 width, Vec3 color, i32 endpointVertices) {
 	lineTriangulated(endpoint0, endpoint1, width, Vec4(color, 1.0f), endpointVertices);
 }
@@ -438,6 +453,10 @@ void Gfx2d::drawDebug() {
 
 	for (const auto& arc : Dbg::circleArcs) {
 		Gfx2d::circleArcTriangulated(arc.center, arc.radius, arc.angleStart, arc.angleEnd, arc.width, Vec4(arc.color));
+	}
+
+	for (const auto& rect : Dbg::filledRectsRotated) {
+		Gfx2d::filledRectRotated(rect.center, rect.size, rect.angle, rect.color);
 	}
 	drawFilledTriangles();
 #endif

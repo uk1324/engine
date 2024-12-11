@@ -96,7 +96,7 @@ QuatT<T> QuatT<T>::normalized() const {
 
 template<typename T>
 T QuatT<T>::length() const {
-	return sqrt(x * x + y * y + z * z + w * w);
+	return std::sqrt(x * x + y * y + z * z + w * w);
 }
 
 template<typename T>
