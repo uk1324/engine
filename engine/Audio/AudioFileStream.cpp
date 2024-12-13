@@ -5,7 +5,7 @@
 
 AudioFileStream AudioFileStream::make() {
     decltype(AudioFileStream::buffers) buffers;
-    AL_TRY(alGenBuffers(buffers.size(), buffers.data()));
+    AL_TRY(alGenBuffers(ALsizei(buffers.size()), buffers.data()));
 
     return AudioFileStream{
         .buffers = buffers,
@@ -18,7 +18,7 @@ AudioFileStream AudioFileStream::make() {
 AudioFileStream::~AudioFileStream() {
     AL_TRY(alSourceStop(source.handle()));
     AL_TRY(alSourcei(source.handle(), AL_BUFFER, NULL));
-    AL_TRY(alDeleteBuffers(buffers.size(), buffers.data()));
+    AL_TRY(alDeleteBuffers(ALsizei(buffers.size()), buffers.data()));
     stb_vorbis_close(stream);
     //AL_TRY(alSourceUnqueueBuffers((buffers.size(), buffers.data()));
 }
@@ -45,7 +45,7 @@ void AudioFileStream::play() {
         for (const auto& buffer : buffers) {
             fillBuffer(buffer);
         }
-        AL_TRY(alSourceQueueBuffers(source.handle(), buffers.size(), buffers.data()));
+        AL_TRY(alSourceQueueBuffers(source.handle(), ALsizei(buffers.size()), buffers.data()));
     }
     state = State::PLAYING;
     source.play();
@@ -124,5 +124,5 @@ void AudioFileStream::fillBuffer(u32 buffer) {
     // TODO: Is this correct and safe?
     const auto format = info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
     const auto size = amount * sizeof(short) * info.channels;
-    AL_TRY(alBufferData(buffer, format, tempBuffer, size, info.sample_rate));
+    AL_TRY(alBufferData(buffer, format, tempBuffer, ALsizei(size), info.sample_rate));
 }

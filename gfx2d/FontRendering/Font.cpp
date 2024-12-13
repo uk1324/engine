@@ -326,7 +326,7 @@ std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterato
 		const auto indexInText = currentInText - text.data();
 		currentInText = codepoint->next;
 		if (auto charInfo = characterRenderInfo(codepoint->codePoint); charInfo.has_value()) {
-			charInfo->indexInText = indexInText;
+			charInfo->indexInText = i32(indexInText);
 			return charInfo;
 		}
 	}
