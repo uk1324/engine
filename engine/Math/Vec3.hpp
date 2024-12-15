@@ -23,9 +23,9 @@ struct Vec3T {
 	constexpr auto operator/(const T& s) const->Vec3T;
 	auto operator/=(const T& s)->Vec3T&;
 	Vec3T operator/(const Vec3T& v);
-	auto length() const -> float;
-	auto lengthSquared() const -> float;
-	auto normalized() const->Vec3T;
+	auto length() const -> T;
+	auto lengthSquared() const -> T;
+	auto normalized() const -> Vec3T;
 	Vec3T roundedToDecimalDigits(int digitsCount) const;
 	T distanceTo(Vec3T p) const;
 	T distanceSquaredTo(Vec3T p) const;
@@ -152,12 +152,12 @@ Vec3T<T> Vec3T<T>::operator/(const Vec3T& v) {
 }
 
 template<typename T>
-auto Vec3T<T>::length() const -> float {
+auto Vec3T<T>::length() const -> T {
 	return std::sqrt(x * x + y * y + z * z);
 }
 
 template<typename T>
-auto Vec3T<T>::lengthSquared() const -> float {
+auto Vec3T<T>::lengthSquared() const -> T {
 	return x * x + y * y + z * z;
 }
 
