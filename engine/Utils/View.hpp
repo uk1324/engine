@@ -10,6 +10,7 @@
 template<typename T>
 class View {
 public:
+	static View empty();
 	View(T* data, size_t size);
 	/*Span(std::vector<T>& v);
 	explicit Span(List<T>& l);
@@ -165,6 +166,11 @@ const T* View<T>::cend() const {
 //auto Span<T>::crend() const -> std::reverse_iterator<const T*> {
 //	return std::reverse_iterator{ cbegin() };
 //}
+
+template<typename T>
+View<T> View<T>::empty() {
+	return View(nullptr, 0);
+}
 
 template<typename T>
 View<T>::View(T* data, size_t size) 
