@@ -11,7 +11,7 @@
 
 template<typename T>
 struct Vec2T {
-	//constexpr Vec2T();
+	Vec2T() : x(0.0f), y(0.0f) {};
 	constexpr explicit Vec2T(T all);
 	constexpr Vec2T(T x, T y);
 	template<typename U> 

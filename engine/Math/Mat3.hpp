@@ -9,6 +9,7 @@ struct Mat3T {
 
 	static Mat3T rotationX(const T& angle);
 	static Mat3T scale(const Vec3T<T>& s);
+	static Mat3T scale(T x, T y, T z);
 	static Mat3T scale(const T& s);
 	static Mat3T rotationY(const T& angle);
 
@@ -55,6 +56,11 @@ Mat3T<T> Mat3T<T>::scale(const Vec3T<T>& s) {
 }
 
 template<typename T>
+Mat3T<T> Mat3T<T>::scale(T x, T y, T z) {
+	return scale(Vec3(x, y, z));
+}
+
+template<typename T>
 Mat3T<T> Mat3T<T>::scale(const T& s) {
 	return {
 		{ s, 0, 0 },
@@ -76,7 +82,8 @@ Mat3T<T> Mat3T<T>::rotationY(const T& angle) {
 
 template<typename T>
 Mat3T<T> Mat3T<T>::operator*(const Mat3T& m) const {
-	return { basis[0] * m, basis[1] * m, basis[2] * m };
+	//return { basis[0] * m, basis[1] * m, basis[2] * m };
+	return { m.basis[0] * *this, m.basis[1] * *this, m.basis[2] * *this };
 }
 
 template<typename T>

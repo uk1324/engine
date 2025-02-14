@@ -264,7 +264,9 @@ class Shader extends Declaration {
             return 1;
         } else if (type.getName().equals("Mat3x2")) {
             return 3;
-        } else if (type.getName().equals("Mat4")) {
+        } else if (type.getName().equals("Mat3")) {
+            return 3;
+        }else if (type.getName().equals("Mat4")) {
             return 4;
         } else {
             throw new RuntimeException(String.format("TODO: %s", type.toString()));
@@ -432,6 +434,9 @@ abstract class DataType {
     }
     public boolean getIsMat3x2() {
         return getName().equals("Mat3x2");
+    }
+    public boolean getIsMat3() {
+        return getName().equals("Mat3");
     }
     public boolean getIsMat4() {
         return getName().equals("Mat4");

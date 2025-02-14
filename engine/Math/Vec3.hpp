@@ -6,6 +6,7 @@
 
 template<typename T>
 struct Vec3T {
+	Vec3T() {};
 	explicit constexpr Vec3T(const T& v);
 	constexpr Vec3T(const T& x, const T& y, const T& z);
 	template<typename U>

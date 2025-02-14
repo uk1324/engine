@@ -23,6 +23,8 @@ struct Mat4T {
 	Mat4T inversed() const;
 	Mat4T removedTranslation() const;
 
+	Vec3T<T> getTranslation() const;
+
 	const T* data() const;
 	T* data();
 
@@ -439,6 +441,11 @@ Mat4T<T> Mat4T<T>::removedTranslation() const {
 	auto result = *this;
 	result[3] = Vec4T<T>(0.0f, 0.0f, 0.0f, result[3].w);
 	return result;
+}
+
+template<typename T>
+Vec3T<T> Mat4T<T>::getTranslation() const {
+	return Vec3T<T>(basis[3].x, basis[3].y, basis[3].z);
 }
 
 template<typename T>

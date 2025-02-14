@@ -38,8 +38,12 @@ struct Mat2T {
 	Vec2T<T> row0() const;
 	Vec2T<T> row1() const;
 
+	f32* data();
+	const f32* data() const;
+
 	Vec2T<T> columns[2];
 	static const Mat2T identity;
+	static const Mat2T zero;
 };
 
 using Mat2 = Mat2T<float>;
@@ -202,6 +206,16 @@ Vec2T<T> Mat2T<T>::row1() const {
 	return Vec2T(m(0, 1), m(1, 1));
 }
 
+template<typename T>
+f32* Mat2T<T>::data() {
+	return columns[0].data();
+}
+
+template<typename T>
+const f32* Mat2T<T>::data() const {
+	return columns[0].data();
+}
+
 //
 //template<typename T>
 //auto operator*(const Vec2T<T>& v, const Mat2T<T>& m) -> Vec2T<T> {
@@ -238,3 +252,6 @@ Mat2T<T> Mat2T<T>::operator*(const Mat2T& other) const {
 
 template<typename T>
 const Mat2T<T> Mat2T<T>::identity = Mat2T<T>(Vec2T<T>(1, 0), Vec2T<T>(0, 1));
+
+template<typename T>
+const Mat2T<T> Mat2T<T>::zero = Mat2T<T>(Vec2T<T>(0, 0), Vec2T<T>(0, 0));

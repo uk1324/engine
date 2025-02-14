@@ -219,13 +219,17 @@ setVaoAttribute(name, dataType, layout, instanceName, divisor) ::= <<
 <setSingleVaoAttribute(layout, "0", "Float", "2", instanceName, name, divisor)>
 <setSingleVaoAttribute(layout, "1", "Float", "2", instanceName, name, divisor)>
 <setSingleVaoAttribute(layout, "2", "Float", "2", instanceName, name, divisor)>
+<elseif(dataType.isMat3)><\\>
+<setSingleVaoAttribute(layout, "1", "Float", "3", instanceName, name, divisor)>
+<setSingleVaoAttribute(layout, "2", "Float", "3", instanceName, name, divisor)>
+<setSingleVaoAttribute(layout, "0", "Float", "3", instanceName, name, divisor)>
 <elseif(dataType.isMat4)><\\>
 <setSingleVaoAttribute(layout, "0", "Float", "4", instanceName, name, divisor)>
 <setSingleVaoAttribute(layout, "1", "Float", "4", instanceName, name, divisor)>
 <setSingleVaoAttribute(layout, "2", "Float", "4", instanceName, name, divisor)>
 <setSingleVaoAttribute(layout, "3", "Float", "4", instanceName, name, divisor)>
 <else><\\>
-error
+setVaoAttribute error dataFileCpp.stg
 <endif>
 >>
 
