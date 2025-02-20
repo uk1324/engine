@@ -8,6 +8,7 @@ namespace Color4 {
 
 namespace Color3 {
 	Vec3 scientificColoring(float v, float minV, float maxV);
+	Vec3 spectral(f32 t);
 	Vec3 fromHsv(float h, float s, float v);
 	Vec3 toGrayscale(const Vec3& c);
 

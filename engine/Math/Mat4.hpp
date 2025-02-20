@@ -330,12 +330,12 @@ Mat4T<T> Mat4T<T>::inversed() const {
 
 	det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
-	Mat4T<T> inverse = Mat4T<T>(Vec4(), Vec4(), Vec4(), Vec4());
+	Mat4T<T> inverse = Mat4T<T>(Vec4(0.0f), Vec4(0.0f), Vec4(0.0f), Vec4(0.0f));
 
 	if (det == 0)
 		return inverse;
 
-	det = 1.0 / det;
+	det = 1.0f / det;
 
 
 	for (i = 0; i < 16; i++)
