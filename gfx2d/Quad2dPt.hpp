@@ -11,3 +11,4 @@ static constexpr Vertex2dPt quad2dPtVertices[]{
 static constexpr u32 quad2dPtIndices[]{ 0, 1, 2, 2, 1, 3 };
 
 void quad2dPtDrawInstances(usize count);
+void quad2dPtDraw();
