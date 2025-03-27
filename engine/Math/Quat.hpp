@@ -9,7 +9,7 @@ struct QuatT {
 	QuatT(const T& angle, const Vec3T<T>& axis);
 
 	QuatT<T> operator* (const QuatT<T>& rhs) const;
-	QuatT<T> operator*= (const QuatT<T>& rhs);
+	void operator*= (const QuatT<T>& rhs);
 	Vec3T<T> operator* (const Vec3T<T>& rhs) const;
 
 	QuatT<T> operator/(f32 value) const;
@@ -63,7 +63,7 @@ QuatT<T> QuatT<T>::operator*(const QuatT<T>& rhs) const {
 }
 
 template<typename T>
-QuatT<T> QuatT<T>::operator*=(const QuatT<T>& rhs) {
+void QuatT<T>::operator*=(const QuatT<T>& rhs) {
 	*this = rhs * *this;
 }
 
