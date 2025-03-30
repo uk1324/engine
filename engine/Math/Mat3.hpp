@@ -30,6 +30,8 @@ template<typename T>
 Vec3T<T> operator*(const Vec3T<T>& v, const Mat3T<T>& m);
 template<typename T>
 Vec3T<T>& operator*=(Vec3T<T>& v, const Mat3T<T>& m);
+template<typename T>
+Mat3T<T> operator*(f32 s, const Mat3T<T>& m);
 
 template<typename T>
 constexpr Mat3T<T>::Mat3T(const Vec3T<T>& x, const Vec3T<T>& y, const Vec3T<T>& z)
@@ -116,4 +118,14 @@ template<typename T>
 Vec3T<T>& operator*=(Vec3T<T>& v, const Mat3T<T>& m) {
 	*this = *this * m;
 	return *this;
+}
+
+
+template<typename T>
+Mat3T<T> operator*(f32 s, const Mat3T<T>& m) {
+	return Mat3T<T>(
+		s * m[0],
+		s * m[1],
+		s * m[2]
+	);
 }
