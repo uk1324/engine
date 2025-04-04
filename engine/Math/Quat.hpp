@@ -11,6 +11,8 @@ struct QuatT {
 	QuatT<T> operator* (const QuatT<T>& rhs) const;
 	void operator*= (const QuatT<T>& rhs);
 	Vec3T<T> operator* (const Vec3T<T>& rhs) const;
+	QuatT<T> operator*(f32 s) const;
+	void operator*=(f32 s);
 
 	QuatT<T> operator/(f32 value) const;
 
@@ -72,6 +74,19 @@ Vec3T<T> QuatT<T>::operator*(const Vec3T<T>& rhs) const {
 	// https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
 	QuatT<T> q = (*this * QuatT<T>(rhs.x, rhs.y, rhs.z, 0)) * conjugate();
 	return Vec3T<T>(q.x, q.y, q.z);
+}
+
+template<typename T>
+QuatT<T> QuatT<T>::operator*(f32 s) const {
+	return Quat(x * s, y * s, z * s, w * s);
+}
+
+template<typename T>
+void QuatT<T>::operator*=(f32 s) {
+	x *= s;
+	y *= s;
+	z *= s;
+	w *= s;
 }
 
 template<typename T>
