@@ -26,6 +26,8 @@ struct Mat3T {
 	T* data();
 
 	Vec3T<T> basis[3];
+
+	static const Mat3T identity;
 };
 
 using Mat3 = Mat3T<float>;
@@ -56,9 +58,11 @@ template<typename T>
 Mat3T<T>::Mat3T(const std::initializer_list<T>& data)
 	: basis{
 		Vec3T<T>(data.begin()[0], data.begin()[3], data.begin()[6]),
-		Vec3T<T>(data.begin()[1], data.begin()[4], data.begin()[5]),
+		Vec3T<T>(data.begin()[1], data.begin()[4], data.begin()[7]),
 		Vec3T<T>(data.begin()[2], data.begin()[5], data.begin()[8])
-	} {}
+	} {
+	CHECK(data.size() == 9);
+}
 
 template<typename T>
 Mat3T<T> Mat3T<T>::rotationX(const T& angle) {
@@ -159,8 +163,8 @@ Vec3T<T> operator*(const Vec3T<T>& v, const Mat3T<T>& m) {
 
 template<typename T>
 Vec3T<T>& operator*=(Vec3T<T>& v, const Mat3T<T>& m) {
-	*this = *this * m;
-	return *this;
+	v = v * m;
+	return v;
 }
 
 
@@ -172,3 +176,6 @@ Mat3T<T> operator*(f32 s, const Mat3T<T>& m) {
 		s * m[2]
 	);
 }
+
+template<typename T>
+const Mat3T<T> Mat3T<T>::identity(Vec3T<T>(1, 0, 0), Vec3T<T>(0, 1, 0), Vec3T<T>(0, 0, 1));

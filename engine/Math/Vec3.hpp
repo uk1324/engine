@@ -16,6 +16,7 @@ struct Vec3T {
 	auto operator*(const Vec3T& v) const->Vec3T;
 	auto operator*=(const Vec3T& v)->Vec3T&;
 	auto operator*(const T& s) const->Vec3T;
+	void operator*=(const T& s);
 	auto operator+(const Vec3T& v) const->Vec3T;
 	auto operator+=(const Vec3T& v)->Vec3T&;
 	auto operator-(const Vec3T& v) const->Vec3T;
@@ -107,6 +108,13 @@ auto Vec3T<T>::operator*=(const Vec3T& v) -> Vec3T& {
 template<typename T>
 auto Vec3T<T>::operator*(const T& s) const -> Vec3T {
 	return Vec3T{ x * s, y * s, z * s };
+}
+
+template<typename T>
+void Vec3T<T>::operator*=(const T& s) {
+	x *= s;
+	y *= s;
+	z *= s;
 }
 
 template<typename T>

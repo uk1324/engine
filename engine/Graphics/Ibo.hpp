@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Types.hpp>
+#include <View.hpp>
 
 class Ibo {
 public:
@@ -15,6 +15,7 @@ public:
 	Ibo& operator= (Ibo&& other) noexcept;
 
 	void allocateData(const void* data, usize dataByteSize);
+	void allocateData(View<const i32> indices);
 
 	void bind();
 	static void unbind();

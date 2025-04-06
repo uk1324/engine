@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Types.hpp>
+#include <View.hpp>
 #include <span>
 
 void boundVboSetData(intptr_t offset, const void* data, usize dataByteSize);
@@ -29,6 +30,9 @@ public:
 	void setData(intptr_t offset, const void* data, usize dataByteSize);
 	void allocateData(const void* data, usize dataByteSize);
 
+	template<typename T>
+	void allocateData(View<const T> data);
+
 	void bind() const;
 	void bindAsIndexBuffer() const;
 
@@ -42,3 +46,8 @@ private:
 template<typename T>
 Vbo::Vbo(std::span<const T> vertices) 
 	: Vbo(vertices.data(), vertices.size() * sizeof(T)) {}
+
+template<typename T>
+void Vbo::allocateData(View<const T> data) {
+	allocateData(data.data(), data.size() * sizeof(T));
+}

@@ -35,6 +35,10 @@ void Ibo::allocateData(const void* data, usize dataByteSize) {
 	glBufferData(GL_ARRAY_BUFFER, dataByteSize, data, GL_STATIC_DRAW);
 }
 
+void Ibo::allocateData(View<const i32> indices) {
+	allocateData(indices.data(), indices.size() * sizeof(i32));
+}
+
 void Ibo::bind() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle_);
 }
