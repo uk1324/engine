@@ -23,6 +23,10 @@ float Plane::signedDistance(const Vec3& p) const {
 	return d - dot(p, n);
 }
 
+float Plane::distance(const Vec3& p) const {
+	return abs(signedDistance(p));
+}
+
 bool Plane::isOnPositiveSide(const Vec3& p) const {
 	return signedDistance(p) > 0;
 }

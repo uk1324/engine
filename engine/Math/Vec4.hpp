@@ -12,9 +12,12 @@ struct Vec4T {
 	explicit constexpr Vec4T(Vec3T<T> v, const T& w = 1);
 
 	Vec4T operator+(const Vec4T<T>& v) const;
+	Vec4T operator-(const Vec4T<T>& v) const;
+	void operator-=(const Vec4T<T>& v);
 	Vec4T operator*(const T& s) const;
 	Vec4T operator/(const T& s) const;
 	Vec4T& operator/=(const T& s);
+	Vec4T operator-() const;
 
 	T& operator[](i32 i);
 	const T& operator[](i32 i) const;
@@ -35,6 +38,11 @@ using Vec4 = Vec4T<float>;
 
 template<typename T>
 Vec4T<T> operator*(const T& s, const Vec4T<T>& v);
+
+template<typename T>
+T dot(const Vec4T<T>& a, const Vec4T<T>& b) {
+	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
 
 template<typename T>
 constexpr Vec4T<T>::Vec4T(const T& v)
@@ -63,6 +71,19 @@ Vec4T<T> Vec4T<T>::operator+(const Vec4T<T>& v) const {
 }
 
 template<typename T>
+Vec4T<T> Vec4T<T>::operator-(const Vec4T<T>& v) const {
+	return Vec4T(x - v.x, y - v.y, z - v.z, w - v.w);
+}
+
+template<typename T>
+void Vec4T<T>::operator-=(const Vec4T<T>& v) {
+	x -= v.x;
+	y -= v.y;
+	z -= v.z;
+	w -= v.w;
+}
+
+template<typename T>
 Vec4T<T> Vec4T<T>::operator*(const T& s) const {
 	return Vec4T(x * s, y * s, z * s, w * s);
 }
@@ -76,6 +97,11 @@ template<typename T>
 Vec4T<T>& Vec4T<T>::operator/=(const T& s) {
 	*this = *this / s;
 	return *this;
+}
+
+template<typename T>
+Vec4T<T> Vec4T<T>::operator-() const {
+	return Vec4(-x, -y, -z, -w);
 }
 
 template<typename T>

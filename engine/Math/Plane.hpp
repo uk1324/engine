@@ -9,6 +9,7 @@ struct Plane {
 	static Plane fromPoints(const Vec3& a, const Vec3& b, const Vec3& c);
 
 	float signedDistance(const Vec3& p) const;
+	float distance(const Vec3& p) const;
 	// The positive is the one that the normal points to. (TODO: Check)
 	bool isOnPositiveSide(const Vec3& p) const;
 
