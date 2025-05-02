@@ -12,6 +12,7 @@ struct QuatT {
 	void operator*= (const QuatT<T>& rhs);
 	Vec3T<T> operator* (const Vec3T<T>& rhs) const;
 	QuatT<T> operator*(f32 s) const;
+	QuatT<T> operator-() const;
 	void operator*=(f32 s);
 
 	QuatT<T> operator/(f32 value) const;
@@ -58,10 +59,25 @@ QuatT<T>::QuatT(const T& angle, const Vec3T<T>& axis) {
 
 template<typename T>
 QuatT<T> QuatT<T>::operator*(const QuatT<T>& rhs) const {
-	return QuatT(y * rhs.z - z * rhs.y + x * rhs.w + w * rhs.x,
-		z * rhs.x - x * rhs.z + y * rhs.w + w * rhs.y,
-		x * rhs.y - y * rhs.x + z * rhs.w + w * rhs.z,
-		w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z);
+	//return QuatT(
+	//   w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y,  // i
+	//   w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x,  // j
+	//   w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w,   // k
+	//   w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z  // 1
+	//);
+	return Quat(
+		x * rhs.w + w * rhs.x + y * rhs.z - z * rhs.y,
+		w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x,
+		w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w,
+		w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z
+	);
+
+	//return QuatT(
+	//	y * rhs.z - z * rhs.y + x * rhs.w + w * rhs.x,
+	//	z * rhs.x - x * rhs.z + y * rhs.w + w * rhs.y,
+	//	x * rhs.y - y * rhs.x + z * rhs.w + w * rhs.z,
+	//	w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z
+	//);
 }
 
 template<typename T>
@@ -79,6 +95,11 @@ Vec3T<T> QuatT<T>::operator*(const Vec3T<T>& rhs) const {
 template<typename T>
 QuatT<T> QuatT<T>::operator*(f32 s) const {
 	return Quat(x * s, y * s, z * s, w * s);
+}
+
+template<typename T>
+QuatT<T> QuatT<T>::operator-() const {
+	return Quat(-x, -y, -z, -w);
 }
 
 template<typename T>

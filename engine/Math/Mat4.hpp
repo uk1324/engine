@@ -22,6 +22,7 @@ struct Mat4T {
 
 	Mat4T inversed() const;
 	Mat4T removedTranslation() const;
+	Mat4T transpose() const;
 
 	Vec3T<T> getTranslation() const;
 
@@ -441,6 +442,17 @@ Mat4T<T> Mat4T<T>::removedTranslation() const {
 	auto result = *this;
 	result[3] = Vec4T<T>(0.0f, 0.0f, 0.0f, result[3].w);
 	return result;
+}
+
+template<typename T>
+Mat4T<T> Mat4T<T>::transpose() const {
+	auto& m = *this;
+	return Mat4T<T>{
+		Vec4T<T>(m[0][0], m[1][0], m[2][0], m[3][0]),
+		Vec4T<T>(m[0][1], m[1][1], m[2][1], m[3][1]),
+		Vec4T<T>(m[0][2], m[1][2], m[2][2], m[3][2]),
+		Vec4T<T>(m[0][3], m[1][3], m[2][3], m[3][3])
+	};
 }
 
 template<typename T>

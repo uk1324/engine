@@ -33,6 +33,7 @@ struct Vec3T {
 	T distanceSquaredTo(Vec3T p) const;
 	Vec3T min(const Vec3T& other) const;
 	Vec3T max(const Vec3T& other) const;
+	f32 shortestAngleTo(const Vec3T& v) const;
 
 	bool operator==(const Vec3T&) const = default;
 
@@ -203,6 +204,18 @@ Vec3T<T> Vec3T<T>::min(const Vec3T& other) const {
 template<typename T>
 Vec3T<T> Vec3T<T>::max(const Vec3T& other) const {
 	return Vec3(std::max(x, other.x), std::max(y, other.y), std::max(z, other.z));
+}
+
+template<typename T>
+f32 Vec3T<T>::shortestAngleTo(const Vec3T& v) const {
+	const auto a = dot(this->normalized(), v.normalized());
+	if (a < -1.0f) {
+		a = -1.0f;
+	}
+	if (a > 1.0f) {
+		a = 1.0f;
+	}
+	return acos(a);
 }
 
 template<typename T>
