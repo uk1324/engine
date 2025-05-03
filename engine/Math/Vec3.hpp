@@ -208,7 +208,7 @@ Vec3T<T> Vec3T<T>::max(const Vec3T& other) const {
 
 template<typename T>
 f32 Vec3T<T>::shortestAngleTo(const Vec3T& v) const {
-	const auto a = dot(this->normalized(), v.normalized());
+	auto a = dot(this->normalized(), v.normalized());
 	if (a < -1.0f) {
 		a = -1.0f;
 	}

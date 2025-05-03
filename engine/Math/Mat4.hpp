@@ -205,6 +205,11 @@ Vec4T<T> operator*(const Vec4T<T>& v, const Mat4T<T>& m) {
 }
 
 template<typename T>
+Vec4T<T> operator*(const Mat4T<T>& m, const Vec4T<T>& v) {
+	return v.x * m[0] + v.y * m[1] + v.z * m[2] + v.w * m[3];
+}
+
+template<typename T>
 Vec4T<T>& operator*=(Vec4T<T>& v, const Mat4T<T>& m) {
 	v = v * m;
 	return v;
