@@ -24,6 +24,18 @@ std::optional<f32> raySphereIntersection(Vec3 rayOrigin, Vec3 rayDirection, Vec3
     return root;
 }
 
+std::optional<f32> raySphereIntersection(Vec3 rayOrigin, Vec3 rayDirection, const Sphere& sphere) {
+    return raySphereIntersection(rayOrigin, rayDirection, sphere.center, sphere.radius);
+}
+
+std::optional<Vec3> raySphereIntersectionPoint(Vec3 rayOrigin, Vec3 rayDirection, Vec3 sphereCenter, f32 sphereRadius) {
+    const auto i = raySphereIntersection(rayOrigin, rayDirection, sphereCenter, sphereRadius);
+    if (i.has_value()) {
+        return rayAt(*i, rayOrigin, rayDirection);
+    }
+    return std::nullopt;
+}
+
 std::optional<f32> raySphereIntersection(const Ray3& ray, Vec3 sphereCenter, f32 sphereRadius) {
     return raySphereIntersection(ray.origin, ray.direction, sphereCenter, sphereRadius);
 }

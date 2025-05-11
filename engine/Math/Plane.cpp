@@ -30,3 +30,26 @@ float Plane::distance(const Vec3& p) const {
 bool Plane::isOnPositiveSide(const Vec3& p) const {
 	return signedDistance(p) > 0;
 }
+
+std::optional<f32> rayPlaneIntersection(Vec3 rayOrigin, Vec3 rayDirection, const Plane& plane) {
+	// Assuming vectors are all normalized
+	const auto d = dot(plane.n, rayDirection);
+	const auto epsilon = 1e-6;
+
+	// Perpendicular
+	if (abs(d) < epsilon) {
+		return std::nullopt;
+	}
+	const auto pointOnPlane = plane.n * plane.d;
+	const auto t = dot(pointOnPlane - rayOrigin, plane.n) / d;
+
+	// Wrong direction
+	if (t < 0.0f) {
+		return std::nullopt;
+	}
+	return t;
+}
+
+std::optional<f32> rayPlaneIntersection(const Ray3& ray, const Plane& plane) {
+	return rayPlaneIntersection(ray.origin, ray.direction, plane);
+}

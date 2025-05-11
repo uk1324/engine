@@ -13,6 +13,7 @@ struct QuatT {
 	Vec3T<T> operator* (const Vec3T<T>& rhs) const;
 	QuatT<T> operator*(f32 s) const;
 	QuatT<T> operator-() const;
+	QuatT<T> operator+(const QuatT<T>& other) const;
 	void operator*=(f32 s);
 
 	QuatT<T> operator/(f32 value) const;
@@ -100,6 +101,11 @@ QuatT<T> QuatT<T>::operator*(f32 s) const {
 template<typename T>
 QuatT<T> QuatT<T>::operator-() const {
 	return Quat(-x, -y, -z, -w);
+}
+
+template<typename T>
+QuatT<T> QuatT<T>::operator+(const QuatT<T>& other) const {
+	return Quat(x + other.x, y + other.y, z + other.z, w + other.w);
 }
 
 template<typename T>
