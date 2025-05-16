@@ -6,7 +6,10 @@
 
 template<typename T>
 struct Vec3T {
+	#pragma warning(push)
+	#pragma warning(disable:26495)
 	Vec3T() {};
+	#pragma warning(pop) 
 	explicit constexpr Vec3T(const T& v);
 	constexpr Vec3T(const T& x, const T& y, const T& z);
 	template<typename U>

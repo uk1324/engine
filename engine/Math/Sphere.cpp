@@ -67,8 +67,8 @@ Sphere Sphere::thoughPoints(Vec3 af, Vec3 bf, Vec3 cf, Vec3 df) {
     double x0 = E(y,z);
     double y0 = E(z,x);
     double z0 = E(x,y);
-    double radius = sqrt(sq(Vec3(a.x - x0, a.y - y0, a.z - z0)));
-    return Sphere(Vec3(x0, y0, z0), radius);
+    double radius = sqrt(sq(Vec3T<f64>(a.x - x0, a.y - y0, a.z - z0)));
+    return Sphere(Vec3(f32(x0), f32(y0), f32(z0)), f32(radius));
     #undef U
     #undef D
     #undef E

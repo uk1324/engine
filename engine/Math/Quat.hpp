@@ -41,6 +41,13 @@ Vec3T<T>& operator*=(Vec3T<T>& lhs, const QuatT<T>& rhs);
 using Quat = QuatT<float>;
 
 template<typename T>
+QuatT<T> quatExp(Vec3T<T> vectorPart) {
+	const auto distance = vectorPart.length();
+	const auto v = distance == 0.0f ? Vec3(0.0f) : vectorPart / distance;
+	return QuatT<T>(v.x * sin(distance), v.y * sin(distance), v.z * sin(distance), cos(distance));
+}
+
+template<typename T>
 constexpr QuatT<T>::QuatT(const T& x, const T& y, const T& z, const T& w)
 	: x(x)
 	, y(y)
