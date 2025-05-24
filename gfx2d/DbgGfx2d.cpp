@@ -19,7 +19,7 @@ void Dbg::polygon(View<const Vec2> vertices, f32 width, Vec3 color) {
 		return;
 	}
 
-	i32 previous = vertices.size() - 1;
+	i32 previous = i32(vertices.size()) - 1;
 	for (i32 i = 0; i < vertices.size(); i++) {
 		line(vertices[previous], vertices[i], width, color);
 		previous = i;

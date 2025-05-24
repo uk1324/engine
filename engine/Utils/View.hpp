@@ -214,6 +214,11 @@ View<T> view(T(&array)[SIZE]) {
 }
 
 template<typename T, usize SIZE>
+View<T> view(std::array<T, SIZE>& array) {
+	return View<T>(array, SIZE);
+}
+
+template<typename T, usize SIZE>
 View<const T> constView(const T(&array)[SIZE]) {
 	return View<const T>(array, SIZE);
 }
