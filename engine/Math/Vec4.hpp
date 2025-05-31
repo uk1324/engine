@@ -21,6 +21,8 @@ struct Vec4T {
 	Vec4T& operator/=(const T& s);
 	Vec4T operator-() const;
 
+	bool operator==(const Vec4T& other) const = default;
+
 	T& operator[](i32 i);
 	const T& operator[](i32 i) const;
 
@@ -32,6 +34,10 @@ struct Vec4T {
 
 	T* data();
 	const T* data() const;
+	T* begin();
+	T* end();
+	const T* cbegin() const;
+	const T* cend() const;
 
 	T x, y, z, w;
 };
@@ -163,6 +169,26 @@ T* Vec4T<T>::data() {
 template<typename T>
 inline const T* Vec4T<T>::data() const {
 	return &x;
+}
+
+template<typename T>
+T* Vec4T<T>::begin() {
+	return data();
+}
+
+template<typename T>
+T* Vec4T<T>::end() {
+	return data() + 4;
+}
+
+template<typename T>
+const T* Vec4T<T>::cbegin() const{
+	return data();
+}
+
+template<typename T>
+const T* Vec4T<T>::cend() const {
+	return data() + 4;
 }
 
 template<typename T>
