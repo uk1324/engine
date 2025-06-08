@@ -20,7 +20,7 @@ Plane Plane::fromPoints(const Vec3& a, const Vec3& b, const Vec3& c) {
 }
 
 float Plane::signedDistance(const Vec3& p) const {
-	return d - dot(p, n);
+	return dot(p, n) - d;
 }
 
 float Plane::distance(const Vec3& p) const {

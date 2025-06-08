@@ -66,6 +66,9 @@ template<typename T>
 T dot(const Vec3T<T>& a, const Vec3T<T>& b);
 
 template<typename T>
+Vec3T<T> anyPerpendicularVector(Vec3T<T> v);
+
+template<typename T>
 struct std::hash<Vec3T<T>> {
 	std::size_t operator()(const Vec3T<T>& value) const noexcept {
 		auto r = std::hash<T>()(value.x);
@@ -268,4 +271,14 @@ T dot(const Vec3T<T>& a, const Vec3T<T>& b) {
 template<typename T>
 Vec3T<T> operator*(const T& s, const Vec3T<T>& v) {
 	return v * s;
+}
+
+template<typename T>
+Vec3T<T> anyPerpendicularVector(Vec3T<T> v) {
+	v = v.normalized();
+	const auto attempt = cross(v, Vec3T<T>(1.0f, 0.0f, 0.0f));
+	if (attempt.lengthSquared() == 0.0f) {
+		return cross(v, Vec3T<T>(0.0f, 1.0f, 0.0f)).normalized();
+	}
+	return attempt.normalized();
 }

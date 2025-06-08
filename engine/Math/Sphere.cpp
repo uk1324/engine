@@ -19,7 +19,11 @@ std::optional<f32> raySphereIntersection(Vec3 rayOrigin, Vec3 rayDirection, Vec3
         return std::nullopt;
     }*/
     if (root < 0.0f) {
-        return (-half_b + sqrt_discriminant) / a;
+        const auto r = (-half_b + sqrt_discriminant) / a;
+        if (r < 0.0f) {
+            return std::nullopt;
+        } 
+        return r;
     }
     return root;
 }
