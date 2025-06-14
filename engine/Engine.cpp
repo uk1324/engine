@@ -7,7 +7,6 @@
 #include <GLFW/glfw3.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
-#include <imgui/implot.h>
 
 static void glfwErrorCallback(int errorCode, const char* errorMessage) {
 	Log::fatal("glfw error % %", errorCode, errorMessage);
@@ -135,11 +134,11 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 	IMGUI_CHECKVERSION();
 
 	ImGui::CreateContext();
-	ImPlot::CreateContext();
+	//ImPlot::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 	
-	io.Fonts->AddFontFromFileTTF(fontPath, 20);
+	io.Fonts->AddFontFromFileTTF(fontPath);
 	/*io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;*/
 	auto& style = ImGui::GetStyle();
 	style.WindowRounding = 5.0f;
@@ -155,7 +154,7 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 void Engine::terminateImGui() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
-	ImPlot::DestroyContext();
+	//ImPlot::DestroyContext();
 	ImGui::DestroyContext();
 }
 

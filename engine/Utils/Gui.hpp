@@ -26,7 +26,7 @@ enum class PropertyEditorFlags {
 	TableAdjustable,
 	TableStetchToFit
 };
-bool beginPropertyEditor(const char* id, PropertyEditorFlags flags = PropertyEditorFlags::TableStetchToFit);
+bool beginPropertyEditor(const char* id = "", PropertyEditorFlags flags = PropertyEditorFlags::TableStetchToFit);
 void endPropertyEditor();
 void popPropertyEditor();
 

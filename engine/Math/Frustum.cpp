@@ -23,25 +23,25 @@ Frustum Frustum::fromMatrix(const Mat4& toNdc) {
 	//// This should be negative, because it is on the inside of the frustum so it should be on the negative side of the plane.
 	//CHECK(t < 0.0f);
 
-	const auto t0 = result.planes[2].signedDistance(c[FRONT_BOTTOM_RIGHT_CORNER]);
-	const auto t1 = result.planes[2].signedDistance(c[BACK_BOTTOM_RIGHT_CORNER]);
-	const auto t2 = result.planes[2].signedDistance(c[FRONT_TOP_RIGHT_CORNER]);
-	const auto t3 = result.planes[2].signedDistance(c[BACK_TOP_RIGHT_CORNER]);
+	//const auto t0 = result.planes[2].signedDistance(c[FRONT_BOTTOM_RIGHT_CORNER]);
+	//const auto t1 = result.planes[2].signedDistance(c[BACK_BOTTOM_RIGHT_CORNER]);
+	//const auto t2 = result.planes[2].signedDistance(c[FRONT_TOP_RIGHT_CORNER]);
+	//const auto t3 = result.planes[2].signedDistance(c[BACK_TOP_RIGHT_CORNER]);
 
-	const auto t4 = result.planes[3].signedDistance(c[FRONT_BOTTOM_LEFT_CORNER]);
-	const auto t5 = result.planes[3].signedDistance(c[BACK_BOTTOM_LEFT_CORNER]);
-	const auto t6 = result.planes[3].signedDistance(c[FRONT_TOP_LEFT_CORNER]);
-	const auto t7 = result.planes[3].signedDistance(c[BACK_TOP_LEFT_CORNER]);
+	//const auto t4 = result.planes[3].signedDistance(c[FRONT_BOTTOM_LEFT_CORNER]);
+	//const auto t5 = result.planes[3].signedDistance(c[BACK_BOTTOM_LEFT_CORNER]);
+	//const auto t6 = result.planes[3].signedDistance(c[FRONT_TOP_LEFT_CORNER]);
+	//const auto t7 = result.planes[3].signedDistance(c[BACK_TOP_LEFT_CORNER]);
 
-	const auto t8 = result.planes[4].signedDistance(c[FRONT_BOTTOM_LEFT_CORNER]);
-	const auto t9 = result.planes[4].signedDistance(c[BACK_BOTTOM_LEFT_CORNER]);
-	const auto t10 = result.planes[4].signedDistance(c[FRONT_BOTTOM_RIGHT_CORNER]);
-	const auto t11 = result.planes[4].signedDistance(c[FRONT_BOTTOM_RIGHT_CORNER]);
+	//const auto t8 = result.planes[4].signedDistance(c[FRONT_BOTTOM_LEFT_CORNER]);
+	//const auto t9 = result.planes[4].signedDistance(c[BACK_BOTTOM_LEFT_CORNER]);
+	//const auto t10 = result.planes[4].signedDistance(c[FRONT_BOTTOM_RIGHT_CORNER]);
+	//const auto t11 = result.planes[4].signedDistance(c[FRONT_BOTTOM_RIGHT_CORNER]);
 
-	const auto t12 = result.planes[5].signedDistance(c[FRONT_TOP_LEFT_CORNER]);
-	const auto t13 = result.planes[5].signedDistance(c[BACK_TOP_LEFT_CORNER]);
-	const auto t14 = result.planes[5].signedDistance(c[FRONT_TOP_RIGHT_CORNER]);
-	const auto t15 = result.planes[5].signedDistance(c[FRONT_TOP_RIGHT_CORNER]);
+	//const auto t12 = result.planes[5].signedDistance(c[FRONT_TOP_LEFT_CORNER]);
+	//const auto t13 = result.planes[5].signedDistance(c[BACK_TOP_LEFT_CORNER]);
+	//const auto t14 = result.planes[5].signedDistance(c[FRONT_TOP_RIGHT_CORNER]);
+	//const auto t15 = result.planes[5].signedDistance(c[FRONT_TOP_RIGHT_CORNER]);
 
  	return result;
 }
