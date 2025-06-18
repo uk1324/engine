@@ -1,6 +1,6 @@
 #include <engine/Graphics/ShaderProgram.hpp>
 #include <engine/Log.hpp>
-#include <glad/glad.h>
+#include <opengl/gl.h>
 #include <sstream>
 
 std::expected<ShaderProgram, ShaderProgram::Error> ShaderProgram::tryCompile(std::string_view vertexPath, std::string_view fragmentPath) {
@@ -31,13 +31,13 @@ ShaderProgram::~ShaderProgram() {
 
 ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
 	: handle_(other.handle_) {
-	other.handle_ = NULL;
+	other.handle_ = 0;
 }
 
 ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
 	glDeleteProgram(handle_);
 	handle_ = other.handle_;
-	other.handle_ = NULL;
+	other.handle_ = 0;
 	m_cachedUniformLocations = std::move(other.m_cachedUniformLocations);
 	return *this;
 }
@@ -58,21 +58,43 @@ std::optional<std::string> ShaderProgram::link() {
 	return std::nullopt;
 }
 
+#include <iostream>
+
 void ShaderProgram::use() {
+	//printf("%d", handle_);
+	//std::cout << handle_ << '\n';
+	//put("before use");
 	glUseProgram(handle_);
+	//put("after use");
 }
 
 // Using glProgramUniform instead of glUniform might be sometimes faster because it doesn't need a glUsePgoram call before it.
 void ShaderProgram::set(std::string_view name, const Vec2& vec) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform2fv(getUniformLocation(name.data()), 1, vec.data());
+#else
 	glProgramUniform2fv(handle_, getUniformLocation(name.data()), 1, vec.data());
+#endif
+
 }
 
 void ShaderProgram::set(std::string_view name, const Vec3& vec) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform3fv(getUniformLocation(name.data()), 1, vec.data());
+#else
 	glProgramUniform3fv(handle_, getUniformLocation(name.data()), 1, vec.data());
+#endif
 }
 
 void ShaderProgram::set(std::string_view name, const Vec4& vec) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform4fv(getUniformLocation(name.data()), 1, vec.data());
+#else
 	glProgramUniform4fv(handle_, getUniformLocation(name.data()), 1, vec.data());
+#endif
 }
 
 //void ShaderProgram::setVec3I(std::string_view name, const Vec3I& vec)
@@ -86,12 +108,25 @@ void ShaderProgram::set(std::string_view name, const Vec4& vec) {
 //}
 
 void ShaderProgram::set(std::string_view name, int32_t value) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform1i(getUniformLocation(name.data()), value);
+#else
 	glProgramUniform1i(handle_, getUniformLocation(name.data()), value);
+#endif
 }
 
+
+#ifndef __EMSCRIPTEN__
 void ShaderProgram::set(std::string_view name, uint32_t value) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform1ui(handle_, getUniformLocation(name.data()), value);
+#else
 	glProgramUniform1ui(handle_, getUniformLocation(name.data()), value);
+#endif
 }
+#endif
 
 void ShaderProgram::setTexture(std::string_view name, int index, Texture& texture, u32 target) {
 	setTexture(name, index, texture.handle(), target);
@@ -109,7 +144,12 @@ void ShaderProgram::setActiveTexture(std::string_view name, int value) {
 }
 
 void ShaderProgram::set(std::string_view name, float value) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform1f(getUniformLocation(name.data()), value);
+#else
 	glProgramUniform1f(handle_, getUniformLocation(name.data()), value);
+#endif
 }
 
 void ShaderProgram::set(std::string_view name, bool value) {
@@ -118,19 +158,39 @@ void ShaderProgram::set(std::string_view name, bool value) {
 }
 
 void ShaderProgram::set(std::string_view name, const Mat3x2& value) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniformMatrix3x2fv(getUniformLocation(name), 1, false, reinterpret_cast<const float*>(value.m));
+#else
 	glProgramUniformMatrix3x2fv(handle_, getUniformLocation(name), 1, false, reinterpret_cast<const float*>(value.m));
+#endif
 }
 
 void ShaderProgram::set(std::string_view name, const Mat3& value) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniformMatrix3fv(getUniformLocation(name.data()), 1, GL_FALSE, value.data());
+#else
 	glProgramUniformMatrix3fv(handle_, getUniformLocation(name.data()), 1, GL_FALSE, value.data());
+#endif
 }
 
 void ShaderProgram::set(std::string_view name, const Mat4& value) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniformMatrix4fv(getUniformLocation(name.data()), 1, GL_FALSE, value.data());
+#else
 	glProgramUniformMatrix4fv(handle_, getUniformLocation(name.data()), 1, GL_FALSE, value.data());
+#endif
 }
 
 void ShaderProgram::set(std::string_view name, std::span<const Vec2> vecs) {
+#ifdef __EMSCRIPTEN__
+	use();
+	glUniform2fv(getUniformLocation(name.data()), GLsizei(vecs.size()), reinterpret_cast<const float*>(vecs.data()));
+#else
 	glProgramUniform2fv(handle_, getUniformLocation(name.data()), GLsizei(vecs.size()), reinterpret_cast<const float*>(vecs.data()));
+#endif
 }
 
 GLuint ShaderProgram::handle() const {
@@ -145,10 +205,12 @@ std::expected<ShaderProgram, ShaderProgram::Error> ShaderProgram::fromShaders(
 		return std::unexpected(ShaderProgram::Error{
 			.vertexError = !vertex.has_value() ? std::optional(std::move(vertex.error())) : std::nullopt,
 			.fragmentError = !fragment.has_value() ? std::optional(std::move(fragment.error())) : std::nullopt,
-		});
+			});
 	}
 
 	ShaderProgram program(glCreateProgram());
+	//std::cout << "created shader: " << program.handle() << '\n';
+
 	program.addShader(*vertex);
 	program.addShader(*fragment);
 	auto linkerError = program.link();
@@ -158,7 +220,7 @@ std::expected<ShaderProgram, ShaderProgram::Error> ShaderProgram::fromShaders(
 	return program;
 }
 
-ShaderProgram::ShaderProgram(u32 handle) 
+ShaderProgram::ShaderProgram(u32 handle)
 	: handle_(handle) {
 }
 
@@ -169,6 +231,7 @@ ShaderProgram ShaderProgram::null() {
 int ShaderProgram::getUniformLocation(std::string_view name) {
 	// Can't assume that the string_view data won't get destroyed.
 	std::string uniformName(name);
+	//put("looking for uniform %", name);
 	auto location = m_cachedUniformLocations.find(uniformName);
 	if (location == m_cachedUniformLocations.end())
 	{

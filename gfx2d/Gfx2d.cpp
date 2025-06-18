@@ -9,12 +9,13 @@
 #include <engine/Window.hpp>
 
 Gfx2d Gfx2d::make() {
-	auto instancesVbo = Vbo(1024ull * 10);
+	auto instancesVbo = Vbo::dynamicDraw(1024ull * 10);
 
 	Vbo quad2dPtVbo(quad2dPtVertices, sizeof(quad2dPtVertices));
 	Ibo quad2dPtIbo(quad2dPtIndices, sizeof(quad2dPtIndices));
 
 	auto circleVao = createInstancingVao<CircleShader>(quad2dPtVbo, quad2dPtIbo, instancesVbo);
+	/*auto circleVao = createInstancingVao<CircleShader>(quad2dPtVbo, quad2dPtIndices, sizeof(quad2dPtIndices), instancesVbo);*/
 
 	auto diskVao = createInstancingVao<DiskShader>(quad2dPtVbo, quad2dPtIbo, instancesVbo);
 
@@ -24,7 +25,7 @@ Gfx2d Gfx2d::make() {
 	auto filledTrianglesIbo = Ibo::generate();
 	auto filledTrianglesVao = createInstancingVao<FilledTriangleShader>(filledTrianglesVbo, filledTrianglesIbo, instancesVbo);
 
-	auto fontRenderer = FontRenderer(quad2dPtVbo, quad2dPtIbo, instancesVbo);
+	//auto fontRenderer = FontRenderer(quad2dPtVbo, quad2dPtIbo, instancesVbo);
 
 	return Gfx2d{
 		MOVE(quad2dPtVbo),
@@ -44,7 +45,7 @@ Gfx2d Gfx2d::make() {
 		MOVE(filledTrianglesIbo),
 		MOVE(filledTrianglesVao),
 		.filledTriangleShader = MAKE_GENERATED_SHADER(FILLED_TRIANGLE),
-		MOVE(fontRenderer),
+		//MOVE(fontRenderer),
 		MOVE(instancesVbo),
 	};
 }

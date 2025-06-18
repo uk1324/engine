@@ -14,7 +14,7 @@ out vec4 fragColor;
 void main() {
 	vec2 p = position;
 	
-	const float dist = length(position);
+	float dist = length(position);
 	float smoothing = fwidth(dist) * 2.0;
 
 	float d0 = dist;

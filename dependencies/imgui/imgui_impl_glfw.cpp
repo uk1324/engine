@@ -1,3 +1,6 @@
+#include <engine/Input/Input.hpp>
+
+
 // dear imgui: Platform Backend for GLFW
 // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
 // (Info: GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
@@ -432,8 +435,15 @@ void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused)
     io.AddFocusEvent(focused != 0);
 }
 
-void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y)
-{
+#include <iostream>
+
+void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y) {
+    #ifdef __EMSCRIPTEN__
+    //std::cout << x << ' ' << y << '\n';
+    x = Input::virtualCursor.x;
+    y = Input::virtualCursor.y;
+    #endif
+
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackCursorPos != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
         bd->PrevUserCallbackCursorPos(window, x, y);
@@ -754,7 +764,12 @@ static void ImGui_ImplGlfw_UpdateMouseData()
             if (bd->MouseWindow == nullptr)
             {
                 double mouse_x, mouse_y;
+                #ifdef __EMSCRIPTEN__
+                mouse_x = Input::virtualCursor.x;
+                mouse_y = Input::virtualCursor.y;
+                #else
                 glfwGetCursorPos(window, &mouse_x, &mouse_y);
+                #endif 
                 bd->LastValidMousePos = ImVec2((float)mouse_x, (float)mouse_y);
                 io.AddMousePosEvent((float)mouse_x, (float)mouse_y);
             }

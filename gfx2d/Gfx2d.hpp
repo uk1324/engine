@@ -86,7 +86,7 @@ struct Gfx2d {
 	f32 getQuadPixelSizeY(f32 scale);
 	i32 calculateCircleVertexCount(f32 radius) const;
 
-	FontRenderer fontRenderer;
+	//FontRenderer fontRenderer;
 
 	Camera camera;
 

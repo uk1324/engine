@@ -1,11 +1,19 @@
 #include <engine/Graphics/Vbo.hpp>
-#include <glad/glad.h>
+#include <opengl/gl.h>
 
-Vbo::Vbo(usize dataByteSize) {
-	glGenBuffers(1, &handle_);
-	bind();
+Vbo Vbo::dynamicDraw(usize dataByteSize) {
+	auto r = Vbo::generate();
+	r.bind();
 	glBufferData(GL_ARRAY_BUFFER, dataByteSize, nullptr, GL_DYNAMIC_DRAW);
+	return r;
 }
+
+
+//Vbo::Vbo(usize dataByteSize) {
+//	glGenBuffers(1, &handle_);
+//	bind();
+//	glBufferData(GL_ARRAY_BUFFER, dataByteSize, nullptr, GL_DYNAMIC_DRAW);
+//}
 
 Vbo::Vbo(const void* data, usize dataByteSize) {
 	glGenBuffers(1, &handle_);
@@ -67,9 +75,11 @@ void boundVboSetData(intptr_t offset, const void* data, usize dataByteSize) {
 	glBufferSubData(GL_ARRAY_BUFFER, offset, dataByteSize, data);
 }
 
+#ifndef __EMSCRIPTEN__
 void boundVboReadData(intptr_t offset, void* readData, usize readDataBufferSize) {
 	glGetBufferSubData(GL_ARRAY_BUFFER, 0, readDataBufferSize, readData);
 }
+#endif
 
 void boundVboAllocateData(const void* data, usize dataByteSize) {
 	glBufferData(GL_ARRAY_BUFFER, dataByteSize, data, GL_DYNAMIC_DRAW);

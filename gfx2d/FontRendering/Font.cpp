@@ -104,17 +104,19 @@ static std::unordered_map<K, V> fromJson(const Json::Value& value) {
 
 #include <iostream>
 
+static const Texture::Settings atlasTextureSettings{
+	.format = Texture::Format::RGBA,
+	.wrapS = Texture::Wrap::CLAMP_TO_EDGE,
+	.wrapT = Texture::Wrap::CLAMP_TO_EDGE,
+};
+
 std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 	const char* fontPath,
 	const char* cachedSdfPath,
 	const char* cachedFontInfoPath,
 	std::span<const std::pair<char32_t, char32_t>> rangesToLoad,
 	int fontPixelHeight) {
-	const Texture::Settings atlasTextureSettings{
-		.format = Texture::Format::RGBA,
-		.wrapS = Texture::Wrap::CLAMP_TO_EDGE,
-		.wrapT = Texture::Wrap::CLAMP_TO_EDGE,
-	};
+	
 
 	auto tryLoadCached = [&]() -> std::optional<Font> {
 		const auto cachedSdfImage = Image32::fromFile(cachedSdfPath);
@@ -157,7 +159,9 @@ std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 	if (auto result = tryLoadCached()) {
 		return std::move(*result);
 	}
-
+	#ifdef __EMSCRIPTEN__
+	ASSERT_NOT_REACHED();
+	#else
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft)) {
 		return std::unexpected(Font::LoadError{ "could not init FreeType Library" });
@@ -270,6 +274,7 @@ std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 		.fontAtlasPixelSize = Vec2T<int>(output.atlasImage.size()),
 		.glyphs = std::move(glyphs) 
 	};
+	#endif
 }
 
 bool Glyph::isVisible() const {
@@ -333,3 +338,142 @@ std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterato
 
 	return std::nullopt;
 }
+
+Font loadFontSdfFromMemory(i32 pixelHeight, std::unordered_map<char32_t, Glyph>&& glyphs, const char* image, i32 imageSizeX, i32 imageSizeY) {
+	return Font{
+		.pixelHeight = pixelHeight,
+		.fontAtlas = Texture(
+			Image32(reinterpret_cast<const Pixel32*>(image), imageSizeX, imageSizeY),
+			atlasTextureSettings
+		),
+		.fontAtlasPixelSize = Vec2T<int>(imageSizeX, imageSizeY),
+		.glyphs = std::move(glyphs) 
+	};
+}
+
+#include <StringStream.hpp>
+#include <ostream>
+
+struct SourceGenerator : std::ostream {
+	struct IndentationScope {
+		IndentationScope(SourceGenerator& generator)
+			: generator(generator) {
+			generator.indentationStart();
+		}
+		~IndentationScope() {
+			generator.indentationEnd();
+		}
+
+		SourceGenerator& generator;
+	};
+
+	struct SourceGeneratorBuf : public std::stringbuf {
+		SourceGeneratorBuf(SourceGenerator& self) : self(self) {}
+
+		int_type overflow(int_type c) override {
+			if (c == '\n') {
+				for (i32 i = 0; i < self.indentation; i++) {
+					string += '\t';
+				}
+			}
+			string += c;
+			
+			// Not sure what should be returned here. https://en.cppreference.com/w/cpp/io/basic_streambuf/overflow
+			return 0;
+		}
+		std::string string;
+		SourceGenerator& self;
+	};
+	SourceGeneratorBuf buffer;
+
+	[[nodiscard]] IndentationScope indentationScope() {
+		return IndentationScope(*this);
+	}
+
+	SourceGenerator()
+		: std::ostream(&buffer)
+		, buffer(*this) {}
+
+	std::string& string() {
+		return buffer.string;
+	}
+	//const std::string& string() const;
+
+	i32 indentation = 0;
+	void indentationStart() {
+		indentation++;
+	}
+	void indentationEnd() {
+		indentation--;
+	}
+};
+
+Font saveFontToCpp(const char* imagePath, const char* fontDataPath) {
+	auto image = Image32::fromFile(imagePath);
+
+	if (!image.has_value()) {
+		ASSERT_NOT_REACHED();
+	}
+
+	const auto fontInfo = tryLoadJsonFromFile(fontDataPath);
+	if (!fontInfo.has_value()) {
+		ASSERT_NOT_REACHED();
+	}
+
+	try {
+		const auto fontHeight = fontInfo->at("pixelHeight").intNumber();
+		auto glyphs = fromJson<char32_t, Glyph>(fontInfo->at("glyphs"));
+
+		SourceGenerator g;
+
+		g << "std::unordered_map<char32_t, Glyph> fontGlyphs() {";
+		{
+			g << "std::unordered_map<char32_t, Glyph> r;\n";
+			auto _ = g.indentationScope();
+			for (const auto& [c, glyph] : glyphs) {
+				g << "r.insert({\n";
+				auto _ = g.indentationScope();
+				{
+					auto _ = g.indentationScope();
+					g << "char32_t(" << i32(c) << "),\n";
+					auto outVec2Prop = [&](const char* name, Vec2T<i32> v) {
+						g << "." << name << " = { " << v.x << ", " << v.y << " },\n";
+					};
+					g << "Glyph{ ";
+					outVec2Prop("offsetInAtlas", glyph.offsetInAtlas);
+					outVec2Prop("sizeInAtlas", glyph.sizeInAtlas);
+					outVec2Prop("visibleSize", glyph.visibleSize);
+					outVec2Prop("bearingRelativeToOffsetInAtlas", glyph.bearingRelativeToOffsetInAtlas);
+					outVec2Prop("visibleBearing", glyph.visibleBearing);
+					outVec2Prop("advance", glyph.advance);
+					g << "} \n";
+				}
+				g << "});\n";
+			}
+			g << "return r;";
+		}
+		g << "\n }";
+		g << "static const int fontHeight = " << fontHeight << ";\n";
+		g << "static const int fontImageSizeX = " << image->size().x << ";\n";
+		g << "static const int fontImageSizeY = " << image->size().y << ";\n";
+		g << "static const char fontImage[] {";
+		for (i32 i = 0; i < image->dataSizeBytes(); i++) {
+			if (i % 10 == 0) {
+				g << '\n';
+			}
+			const auto data = reinterpret_cast<char*>(image->data());
+			g << i32(data[i]) << ",";
+		}
+		g << "\n};";
+
+		//std::cout << g.string() << '\n';
+		std::ofstream output("generated/FontData.hpp");
+		output << g.string();
+
+
+	} catch (const Json::Value::Exception&) {
+		ASSERT_NOT_REACHED();
+	}
+}
+
+

@@ -5,13 +5,17 @@
 #include <span>
 
 void boundVboSetData(intptr_t offset, const void* data, usize dataByteSize);
+#ifndef __EMSCRITPTEN__
+// Requires opengl 4, which is not supported by emscripten
 void boundVboReadData(intptr_t offset, void* readData, usize readDataBufferSize);
+#endif
 void boundVboAllocateData(const void* data, usize dataByteSize);
 
 class Vbo {
 public:
 	// Dynamic draw
-	explicit Vbo(usize dataByteSize); // On 32 bit systems this would be the same constructor as the private one maybe rename to staitc function dynamic draw and static draw.
+	//explicit Vbo(usize dataByteSize); // On 32 bit systems this would be the same constructor as the private one maybe rename to staitc function dynamic draw and static draw.
+	static Vbo dynamicDraw(usize dataByteSize);
 	// Static draw
 	Vbo(const void* data, size_t dataByteSize);
 	template<typename T>

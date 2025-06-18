@@ -52,6 +52,7 @@ struct Font {
 	};
 
 	static Font loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension = "ttf");
+	static Font loadFontFromMemory();
 	TextInfo textInfo(float maxHeight, std::string_view text, f32 additionalSpacing = 0.0f) const;
 
 	int pixelHeight;
@@ -96,3 +97,8 @@ std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 	const char* cachedFontInfoPath,
 	std::span<const std::pair<char32_t, char32_t>> rangesToLoad,
 	int fontPixelHeight);
+
+Font loadFontSdfFromMemory(
+	i32 pixelHeight, std::unordered_map<char32_t, Glyph>&& glyphs,
+	const char* image, i32 imageSizeX, i32 imageSizeY);
+Font saveFontToCpp(const char* imagePath, const char* fontDataPath);

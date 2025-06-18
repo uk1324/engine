@@ -4,7 +4,38 @@
 #include <engine/Graphics/Ibo.hpp>
 #include <View.hpp>
 #include <vector>
-#include <glad/glad.h>
+#include <opengl/gl.h>
+
+//struct CreateInstancingVaoResult {
+//	Vao vao;
+//	Ibo ibo;
+//};
+//
+//template<typename Shader>
+//static Vao createInstancingVao(Vbo& verticesVbo, void* indiciesData, i32 indicesDataSize, Vbo& instancesVbo) {
+//	auto vao = Vao::generate();
+//	Shader::addAttributesToVao(vao, verticesVbo, instancesVbo);
+//	vao.bind();
+//	// 
+//	if (indiciesData == nullptr) {
+//		Ibo ibo = Ibo::generate();
+//		ibo.bind();
+//		Vao::unbind();
+//		Ibo::unbind();
+//		return { std::move(vao), std::move(ibo) };
+//	} else {
+//		Ibo ibo(indiciesData, indicesDataSize);
+//		ibo.bind();
+//		Vao::unbind();
+//		Ibo::unbind();
+//		return { std::move(vao), std::move(ibo) };
+//	}
+//
+//	/*verticesIbo.bind();
+//	Vao::unbind();
+//	Ibo::unbind();*/
+//}
+
 
 template<typename Shader>
 static Vao createInstancingVao(Vbo& verticesVbo, Ibo& verticesIbo, Vbo& instancesVbo) {

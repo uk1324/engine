@@ -48,7 +48,9 @@ public:
 	void set(std::string_view name, const Vec3& vec);
 	void set(std::string_view name, const Vec4& vec);
 	void set(std::string_view name, int32_t value);
+	#ifndef __EMSCRIPTEN__
 	void set(std::string_view name, uint32_t value);
+	#endif	
 	static constexpr auto TEXTURE_2D = 0x0DE1;
 	void setTexture(std::string_view name, int index, Texture& texture, u32 target = TEXTURE_2D);
 	void setTexture(std::string_view name, int index, u32 textureHandle, u32 target = TEXTURE_2D);

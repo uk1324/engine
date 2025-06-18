@@ -3,15 +3,21 @@
 #include <engine/Input/Input.hpp>
 #include <Timer.hpp>
 #include <Put.hpp>
-#include <glad/glad.h>
+#include <opengl/gl.h>
 #include <GLFW/glfw3.h>
+#ifdef __EMSCRIPTEN__
+#include <GLFW/emscripten_glfw3.h>
+#endif
+
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
 static void glfwErrorCallback(int errorCode, const char* errorMessage) {
-	Log::fatal("glfw error % %", errorCode, errorMessage);
+	//Log::fatal("glfw error % %", errorCode, errorMessage);
+	Log::error("glfw error % %", errorCode, errorMessage);
 }
 
+#ifndef __EMSCRIPTEN__
 static void openGlErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
 	// ignore non-significant error/warning codes
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
@@ -77,10 +83,8 @@ static void openGlErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	} else {
 		Log::fatal("OpenGL error %", errorMessage);
 	}
-
-	
-
 }
+#endif
 
 void Engine::initAll(const Window::Settings& windowSettings, const char* imGuiFontPath, const char* imGuiIniPath) {
 	Timer timer;
@@ -104,6 +108,10 @@ void Engine::terminateAll() {
 }
 
 void Engine::initGlfw() {
+	#ifdef __EMSCRIPTEN__
+	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_EMSCRIPTEN);
+	#endif 
+
 	if (glfwInit() == GLFW_FALSE) {
 		Log::fatal("failed to initialize GLFW");
 	}
@@ -115,6 +123,7 @@ void Engine::terminateGlfw() {
 }
 
 void Engine::initOpenGl() {
+	#ifndef __EMSCRIPTEN__
 	if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == false) {
 		Log::fatal("failed to initialize OpenGL");
 	}
@@ -128,6 +137,7 @@ void Engine::initOpenGl() {
 	} else {
 		Log::error("failed to initialize debug output");
 	}
+	#endif
 }
 
 void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
@@ -137,8 +147,10 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 	//ImPlot::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
+	if (fontPath != nullptr) {
+		io.Fonts->AddFontFromFileTTF(fontPath);
+	}
 	
-	io.Fonts->AddFontFromFileTTF(fontPath);
 	/*io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;*/
 	auto& style = ImGui::GetStyle();
 	style.WindowRounding = 5.0f;
@@ -148,7 +160,11 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 	}
 
 	ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(Window::handle()), true);
+	#ifdef __EMSCRIPTEN__
+	ImGui_ImplOpenGL3_Init("#version 300 es");
+	#else
 	ImGui_ImplOpenGL3_Init("#version 430");
+	#endif
 }
 
 void Engine::terminateImGui() {

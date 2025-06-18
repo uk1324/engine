@@ -35,8 +35,8 @@ public:
 	void bind() const;
 	static void unbind();
 
-private:
 	Vao(u32 handle);
+private:
 
 	u32 m_handle;
 };

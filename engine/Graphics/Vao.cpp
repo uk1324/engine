@@ -1,5 +1,5 @@
 #include <engine/Graphics/Vao.hpp>
-#include <glad/glad.h>
+#include <opengl/gl.h>
 
 Vao::~Vao() {
 	glDeleteVertexArrays(1, &m_handle);

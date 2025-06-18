@@ -2,6 +2,8 @@
 #include "FileIo.hpp"
 #include "Overloaded.hpp"
 #include <filesystem>
+#include <vector>
+#include <iostream>
 
 static std::expected<std::string, PreprocessIncludesError> preprocessIncludesImplementation(std::string_view path, int depth) {
 	using namespace PreprocessIncludesErrors;

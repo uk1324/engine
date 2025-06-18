@@ -13,8 +13,8 @@
 
 template<typename T>
 struct List {
-	static [[nodiscard]] List uninitialized(i64 size);
-	static [[nodiscard]] List empty();
+	[[nodiscard]] static List uninitialized(i64 size);
+	[[nodiscard]] static List empty();
 
 	List(const List&) = delete;
 	List(List&& other) noexcept;

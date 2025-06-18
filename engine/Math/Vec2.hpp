@@ -324,7 +324,6 @@ auto Vec2T<T>::operator[](isize index) const -> const T& {
 	case 1: return y;
 	default:
 		ASSERT_NOT_REACHED();
-		return *reinterpret_cast<const T*>(nullptr);
 	}
 }
 

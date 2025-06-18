@@ -1,5 +1,5 @@
 #include "Fbo.hpp"
-#include <glad/glad.h>
+#include <opengl/gl.h>
 
 Fbo::Fbo(uint32_t handle)
 	: m_handle(handle)

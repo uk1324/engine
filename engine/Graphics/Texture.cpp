@@ -1,7 +1,7 @@
 #include <engine/Graphics/Texture.hpp>
 #include <engine/Log.hpp>
 #include <stb_image/stb_image.h>
-#include <glad/glad.h>
+#include <opengl/gl.h>
 
 Texture::Texture(uint32_t handle)
 	: handle_(handle) {}

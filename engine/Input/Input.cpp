@@ -85,6 +85,13 @@ std::optional<KeyCode> Input::lastKeycodeDownThisFrame() {
 	return lastKeycodeDownThisFrame_;
 }
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/html5.h>
+#include <GLFW/emscripten_glfw3.h>
+#endif
+
+#include <engine/Window.hpp>
+
 auto Input::update() -> void {
 	keyDown.reset();
 	keyDownWithAutoRepeat.reset();
@@ -93,6 +100,28 @@ auto Input::update() -> void {
 	scrollDelta_ = 0.0f;
 	anyKeyPressed_ = false;
 	lastKeycodeDownThisFrame_ = std::nullopt;
+#ifdef __EMSCRIPTEN__
+	while (keyEventQueue.size() > 0) {
+		auto& event = keyEventQueue.front();
+		if (event.type == KeyEventType::UP) {
+			handleKeyUp(event.keycode);
+		} else {
+			handleKeyDown(event.keycode, event.autoRepeat);
+		}
+		keyEventQueue.pop();
+	}
+	EmscriptenPointerlockChangeEvent status;
+	emscripten_get_pointerlock_status(&status);
+	if (status.isActive) {
+		handleMouseMove(Vec2(virtualCursor.x, virtualCursor.y));
+	} else {
+		f64 x, y;
+		glfwGetCursorPos(reinterpret_cast<GLFWwindow*>(Window::handle()), &x, &y);
+		virtualCursor.x = x;
+		virtualCursor.y = y;
+	}
+#endif
+
 }
 
 //static auto setIfAlreadyExists(std::unordered_map<int, bool>& map, int key, bool value) -> void {
@@ -109,7 +138,21 @@ static auto isKeyboardKey(u16 vkCode) -> bool {
 	return !isMouseButton(vkCode);
 }
 
+#include <iostream>
+
 auto Input::onKeyDown(u16 virtualKeyCode, bool autoRepeat) -> void {
+#ifdef __EMSCRIPTEN__
+	keyEventQueue.push(KeyEvent{
+		.keycode = virtualKeyCode,
+		.type = KeyEventType::DOWN,
+		.autoRepeat = autoRepeat,
+		});
+#else
+	handleKeyDown(virtualKeyCode, autoRepeat);
+#endif 
+}
+
+auto Input::handleKeyDown(u16 virtualKeyCode, bool autoRepeat) -> void {
 	if (virtualKeyCode >= VIRTUAL_KEY_COUNT)
 		return;
 
@@ -127,6 +170,18 @@ auto Input::onKeyDown(u16 virtualKeyCode, bool autoRepeat) -> void {
 }
 
 auto Input::onKeyUp(u16 virtualKeyCode) -> void {
+#ifdef __EMSCRIPTEN__
+	keyEventQueue.push(KeyEvent{
+		.keycode = virtualKeyCode,
+		.type = KeyEventType::UP,
+		.autoRepeat = false,
+		});
+#else
+	handleKeyUp(virtualKeyCode);
+#endif 
+}
+
+auto Input::handleKeyUp(u16 virtualKeyCode) -> void {
 	if (virtualKeyCode >= VIRTUAL_KEY_COUNT)
 		return;
 
@@ -135,6 +190,12 @@ auto Input::onKeyUp(u16 virtualKeyCode) -> void {
 }
 
 auto Input::onMouseMove(Vec2 mousePos) -> void {
+#ifndef __EMSCRIPTEN__
+	handleMouseMove(mousePos);
+#endif 
+}
+
+auto Input::handleMouseMove(Vec2 mousePos) -> void {
 	cursorPosClipSpace_ = windowSpaceToClipSpace(mousePos);
 	cursorPosWindowSpace_ = mousePos;
 }
@@ -142,6 +203,14 @@ auto Input::onMouseMove(Vec2 mousePos) -> void {
 auto Input::onMouseScroll(float scroll) -> void {
 	scrollDelta_ = scroll;
 }
+
+#ifdef __EMSCRIPTEN__
+void Input::onMouseMoveEvent(f64 mouseChangeX, f64 mouseChangeY) {
+	virtualCursor.x += mouseChangeX;
+	virtualCursor.y += mouseChangeY;
+}
+#endif
+
 
 bool Input::ignoreImGuiWantCapture = false;
 
@@ -155,3 +224,9 @@ Vec2 Input::cursorPosWindowSpace_ = Vec2(0.0f);
 float Input::scrollDelta_ = 0.0f;
 bool Input::anyKeyPressed_ = false;
 std::optional<KeyCode> Input::lastKeycodeDownThisFrame_ = std::nullopt;
+
+#ifdef __EMSCRIPTEN__
+std::queue<Input::KeyEvent> Input::keyEventQueue;
+//Vec2 Input::mouseMovementQueue;
+Vec2T<f64> Input::virtualCursor = Vec2T<f64>(0.0f);
+#endif

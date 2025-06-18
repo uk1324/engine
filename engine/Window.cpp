@@ -3,6 +3,10 @@
 #include <engine/Input/Input.hpp>
 #include <engine/Log.hpp>
 #include <GLFW/glfw3.h>
+#ifdef __EMSCRIPTEN__
+#include <GLFW/emscripten_glfw3.h>
+#include <emscripten/html5.h>
+#endif
 
 static GLFWwindow* windowHandle = nullptr;
 static bool resizedThisFrame = true;
@@ -40,20 +44,35 @@ static void windowResizeCallback(GLFWwindow* window, int width, int height) {
 
 void Window::init(const Settings& settings) {
 	if (settings.maximized) {
+		#ifndef __EMSCRIPTEN__
 		glfwWindowHint(GLFW_MAXIMIZED, true);
+		#endif
 	}
+
 	if (settings.openGlDebugContext) {
+		#ifndef __EMSCRIPTEN__
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+		#endif
 	}
 	glfwWindowHint(GLFW_SAMPLES, settings.multisamplingSamplesPerPixel);
+	#ifdef __EMSCRIPTEN__
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_SCALE_FRAMEBUFFER, GLFW_TRUE);
+	#else
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Engine::openGlVersionMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Engine::openGlVersionMinor);
+	#endif 
+
 
 	
 	//const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	///*window_width = mode->width;
 	//window_height = mode->height;*/
+
+	#ifdef __EMSCRIPTEN__
+	emscripten_glfw_set_next_window_canvas_selector("#canvas");
+	#endif
 
 	windowHandle = glfwCreateWindow(settings.width, settings.height, settings.title, nullptr, nullptr);
 	//windowHandle = glfwCreateWindow(mode->width, mode->height, settings.title, glfwGetPrimaryMonitor(), nullptr);
@@ -67,6 +86,18 @@ void Window::init(const Settings& settings) {
 	glfwSetMouseButtonCallback(windowHandle, mouseButtonCallback);
 	glfwSetScrollCallback(windowHandle, mouseScrollCallback);
 	glfwSetWindowSizeCallback(windowHandle, windowResizeCallback);
+	#ifdef __EMSCRIPTEN__
+	emscripten_set_mousemove_callback(
+		"#canvas", nullptr, false,
+		+[](int eventType, const EmscriptenMouseEvent* mouseEvent, void* userData) -> bool {
+			
+			Input::onMouseMoveEvent(mouseEvent->movementX, mouseEvent->movementY);
+			return true;
+		}
+	);
+	emscripten_glfw_make_canvas_resizable(windowHandle, "window", nullptr);
+	#endif 
+
 
 	{
 		// Prevent cursor from jumping on first mouse move because before that the mouse position is uninitialized.
@@ -101,7 +132,9 @@ void Window::setClipboard(const char* string) {
 
 void Window::update() {
 	resizedThisFrame = false;
+	#ifndef __EMSCRIPTEN__
 	glfwSwapBuffers(windowHandle);
+	#endif
 }
 
 void Window::close() {

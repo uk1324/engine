@@ -2,7 +2,7 @@
 #include <FileIo.hpp>
 #include <Overloaded.hpp>
 #include <engine/Log.hpp>
-#include <glad/glad.h>
+#include <opengl/gl.h>
 #include <filesystem>
 
 std::expected<Shader, Shader::Error> Shader::compile(std::string_view path, ShaderType type) {
@@ -14,6 +14,14 @@ std::expected<Shader, Shader::Error> Shader::compile(std::string_view path, Shad
 }
 
 std::expected<Shader, Shader::Error> Shader::fromSource(std::string_view source, ShaderType type) {
+	#ifdef __EMSCRIPTEN__
+	const auto firstLineEnd = source.find_first_of('\n');
+	const auto withoutFirstLine = source.substr(firstLineEnd);
+	const auto s = std::string("#version 300 es\nprecision mediump float;\n") + std::string(withoutFirstLine);
+	source = std::string_view(s);
+	//put("%", source);
+	#endif
+
 	const auto handle = glCreateShader(static_cast<GLenum>(type));
 	const char* src = source.data();
 	const auto length = static_cast<GLint>(source.length());

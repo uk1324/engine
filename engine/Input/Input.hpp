@@ -6,6 +6,7 @@
 #include <Types.hpp>
 
 #include <bitset>
+#include <queue>
 #include <optional>
 
 // TODO: Could make a sum type that would store any type of button.
@@ -37,9 +38,13 @@ public:
 	static bool ignoreImGuiWantCapture;
 
 	static auto onKeyDown(u16 virtualKeyCode, bool autoRepeat) -> void;
+	static auto handleKeyDown(u16 virtualKeyCode, bool autoRepeat) -> void;
 	static auto onKeyUp(u16 virtualKeyCode) -> void;
+	static auto handleKeyUp(u16 virtualKeyCode) -> void;
 	static auto onMouseMove(Vec2 mousePos) -> void;
+	static auto handleMouseMove(Vec2 mousePos) -> void;
 	static auto onMouseScroll(float scroll) -> void;
+	static void onMouseMoveEvent(f64 mouseChangeX, f64 mouseChangeY);
 private:
 
 	static constexpr auto MOUSE_BUTTON_COUNT = static_cast<size_t>(MouseButton::COUNT);
@@ -51,6 +56,22 @@ private:
 	// KeyUp doesn't get auto repeated.
 	static std::bitset<VIRTUAL_KEY_COUNT> keyUp;
 	static std::bitset<VIRTUAL_KEY_COUNT> keyHeld;
+
+#ifdef __EMSCRIPTEN__
+	enum class KeyEventType {
+		UP, DOWN,
+	};
+	struct KeyEvent {
+		u16 keycode;
+		KeyEventType type;
+		bool autoRepeat;
+	};
+	static std::queue<KeyEvent> keyEventQueue;
+public:
+	static Vec2T<f64> virtualCursor;
+private:
+#endif 
+
 
 	static Vec2 cursorPosClipSpace_;
 	static Vec2 cursorPosWindowSpace_;

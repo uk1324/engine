@@ -10,7 +10,7 @@ public class Config {
     public static IncludePath JSON_UTILS_PATH = new IncludePath("engine/Utils/Json.hpp");
     public static IncludePath TYPES_PATH = new IncludePath("Types.hpp");
     public static IncludePath SHADER_PROGRAM_PATH = new IncludePath("engine/Graphics/ShaderProgram.hpp");
-    public static IncludePath OPENGL_PATH = new IncludePath("glad/glad.h");
+    public static IncludePath OPENGL_PATH = new IncludePath("opengl/gl.h");
     public static IncludePath VAO_PATH = new IncludePath("engine/Graphics/Vao.hpp");
 
 //    public static String GENERATED_DIRECTORY = "../generated";

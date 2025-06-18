@@ -10,7 +10,7 @@ struct ShaderManager {
 };
 
 
-#ifdef FINAL_RELEASE
+#if defined(FINAL_RELEASE) || defined(__EMSCRIPTEN__)
 //#include <generated/shaderSources.hpp>
 #include "../generated/shaderSources.hpp"
 #define MAKE_GENERATED_SHADER(name) ShaderManager::makeShaderFromSource(name##_SHADER_VERT_SOURCE, name##_SHADER_FRAG_SOURCE)

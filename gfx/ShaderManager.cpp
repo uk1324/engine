@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <string_view>
 #include <engine/Utils/Put.hpp>
+#include <list>
 #include <engine/Utils/Unwrap.hpp>
 
 struct ShaderEntry {

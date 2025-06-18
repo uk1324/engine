@@ -242,7 +242,7 @@ Vec2T<T> operator*(const Mat2T<T>& m, const Vec2T<T>& v) {
 template<typename T>
 Vec2T<T>& operator*=(Vec2T<T>& v, const Mat2T<T>& m) {
 	v = m * v;
-	return *this;
+	return v;
 }
 
 template<typename T>
