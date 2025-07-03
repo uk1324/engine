@@ -10,6 +10,10 @@ static constexpr std::pair<char32_t, char32_t> ASCII_CHARACTER_RANGES[]{
 	{ 0, 127 },
 };
 
+static constexpr std::pair<char32_t, char32_t> NUMBERS_CHARACTER_RANGES[]{
+	{ '0', '9' },
+};
+
 // https://character-table.netlify.app/polish/#unicode-ranges
 static constexpr std::pair<char32_t, char32_t> POLISH_CHARACTER_RANGES[]{
 	{ 0, 127 },
@@ -51,8 +55,7 @@ struct Font {
 		std::string message;
 	};
 
-	static Font loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension = "ttf");
-	static Font loadFontFromMemory();
+	static Font loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension = "ttf", std::span<const std::pair<char32_t, char32_t>> rangesToLoad = std::span(ASCII_CHARACTER_RANGES));
 	TextInfo textInfo(float maxHeight, std::string_view text, f32 additionalSpacing = 0.0f) const;
 
 	int pixelHeight;
@@ -100,5 +103,5 @@ std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 
 Font loadFontSdfFromMemory(
 	i32 pixelHeight, std::unordered_map<char32_t, Glyph>&& glyphs,
-	const char* image, i32 imageSizeX, i32 imageSizeY);
+	const u8* image, i32 imageSizeX, i32 imageSizeY);
 Font saveFontToCpp(const char* imagePath, const char* fontDataPath);

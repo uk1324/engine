@@ -91,6 +91,7 @@ std::optional<KeyCode> Input::lastKeycodeDownThisFrame() {
 #endif
 
 #include <engine/Window.hpp>
+#include <algorithm>
 
 auto Input::update() -> void {
 	keyDown.reset();
@@ -121,7 +122,6 @@ auto Input::update() -> void {
 		virtualCursor.y = y;
 	}
 #endif
-
 }
 
 //static auto setIfAlreadyExists(std::unordered_map<int, bool>& map, int key, bool value) -> void {
@@ -206,6 +206,13 @@ auto Input::onMouseScroll(float scroll) -> void {
 
 #ifdef __EMSCRIPTEN__
 void Input::onMouseMoveEvent(f64 mouseChangeX, f64 mouseChangeY) {
+	// Fix firefox mouse drift https://donitz.itch.io/burger-frights/devlog/332185/fixed-drifting-mouse-bug-in-firefox.
+	if (abs(mouseChangeX) <= 1) {
+		mouseChangeX = 0;
+	}
+	if (abs(mouseChangeY) <= 1) {
+		mouseChangeY = 0;
+	}
 	virtualCursor.x += mouseChangeX;
 	virtualCursor.y += mouseChangeY;
 }

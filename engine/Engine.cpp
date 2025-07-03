@@ -88,17 +88,23 @@ static void openGlErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 void Engine::initAll(const Window::Settings& windowSettings, const char* imGuiFontPath, const char* imGuiIniPath) {
 	Timer timer;
+	#ifdef DEBUG
 	put("Engine::init start");
+	#endif
 	initGlfw();
 	{
 		Timer timer;
 		Window::init(windowSettings);
+		#ifdef DEBUG
 		put("Window::init took: %", timer.elapsedMilliseconds());
+		#endif
 	}
 	initOpenGl();
 	initImGui(imGuiFontPath, imGuiIniPath);
 
+	#ifdef DEBUG
 	put("Engine::init took: %", timer.elapsedMilliseconds());
+	#endif
 }
 
 void Engine::terminateAll() {

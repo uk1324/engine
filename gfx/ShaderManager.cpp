@@ -100,8 +100,12 @@ ShaderProgram& ShaderManager::makeShader(const char* vertPath, const char* fragP
  	return shader.program;
 }
 
+#include <Timer.hpp>
+
 ShaderProgram& ShaderManager::makeShaderFromSource(const char* vertSource, const char* fragSource) {
+	Timer t;
 	auto shader = unwrap(ShaderProgram::fromSource(vertSource, fragSource));
+	t.tookSeconds("shader compilation");
 	nonReloadableShaders.push_back(std::move(shader));
 	return nonReloadableShaders.back();
 }

@@ -11,7 +11,7 @@
 #include <fstream>
 #include <engine/Log.hpp>
 
-Font Font::loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension) {
+Font Font::loadSdfWithCachingAtDefaultPath(std::string_view directory, std::string_view fontName, std::string_view extension, std::span<const std::pair<char32_t, char32_t>> rangesToLoad) {
 	const auto fontPath = std::string(directory) + "/" + std::string(fontName) + "." + std::string(extension);
 	const auto atlasPath = "cached/" + std::string(fontName) + ".png";
 	const auto infoPath = "cached/" + std::string(fontName) + ".json";
@@ -20,7 +20,7 @@ Font Font::loadSdfWithCachingAtDefaultPath(std::string_view directory, std::stri
 		fontPath.c_str(),
 		atlasPath.c_str(),
 		infoPath.c_str(),
-		ASCII_CHARACTER_RANGES,
+		rangesToLoad,
 		64
 	);
 	//put("font loading took %", timer.elapsedMilliseconds());
@@ -339,74 +339,40 @@ std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterato
 	return std::nullopt;
 }
 
-Font loadFontSdfFromMemory(i32 pixelHeight, std::unordered_map<char32_t, Glyph>&& glyphs, const char* image, i32 imageSizeX, i32 imageSizeY) {
-	return Font{
+#include <Timer.hpp>
+#include <opengl/gl.h>
+
+Font loadFontSdfFromMemory(i32 pixelHeight, std::unordered_map<char32_t, Glyph>&& glyphs, const u8* image, i32 imageSizeX, i32 imageSizeY) {
+	Timer t;
+
+	auto texture = Texture::generate();
+	texture.bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, imageSizeX, imageSizeY, 0, GL_RED, GL_UNSIGNED_BYTE, image);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, imageSizeX, imageSizeY, 0, GL_RED, GL_UNSIGNED_BYTE, image);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, imageSizeX, imageSizeY, 0, GL_RED, GL_UNSIGNED_BYTE, image);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	auto result = Font{
 		.pixelHeight = pixelHeight,
-		.fontAtlas = Texture(
+		.fontAtlas = std::move(texture),
+		/*.fontAtlas = Texture(
 			Image32(reinterpret_cast<const Pixel32*>(image), imageSizeX, imageSizeY),
 			atlasTextureSettings
-		),
+		),*/
 		.fontAtlasPixelSize = Vec2T<int>(imageSizeX, imageSizeY),
 		.glyphs = std::move(glyphs) 
 	};
+	t.tookSeconds("loading font");
+	return result;
 }
 
-#include <StringStream.hpp>
-#include <ostream>
-
-struct SourceGenerator : std::ostream {
-	struct IndentationScope {
-		IndentationScope(SourceGenerator& generator)
-			: generator(generator) {
-			generator.indentationStart();
-		}
-		~IndentationScope() {
-			generator.indentationEnd();
-		}
-
-		SourceGenerator& generator;
-	};
-
-	struct SourceGeneratorBuf : public std::stringbuf {
-		SourceGeneratorBuf(SourceGenerator& self) : self(self) {}
-
-		int_type overflow(int_type c) override {
-			if (c == '\n') {
-				for (i32 i = 0; i < self.indentation; i++) {
-					string += '\t';
-				}
-			}
-			string += c;
-			
-			// Not sure what should be returned here. https://en.cppreference.com/w/cpp/io/basic_streambuf/overflow
-			return 0;
-		}
-		std::string string;
-		SourceGenerator& self;
-	};
-	SourceGeneratorBuf buffer;
-
-	[[nodiscard]] IndentationScope indentationScope() {
-		return IndentationScope(*this);
-	}
-
-	SourceGenerator()
-		: std::ostream(&buffer)
-		, buffer(*this) {}
-
-	std::string& string() {
-		return buffer.string;
-	}
-	//const std::string& string() const;
-
-	i32 indentation = 0;
-	void indentationStart() {
-		indentation++;
-	}
-	void indentationEnd() {
-		indentation--;
-	}
-};
+#include <SourceGenerator.hpp>
 
 Font saveFontToCpp(const char* imagePath, const char* fontDataPath) {
 	auto image = Image32::fromFile(imagePath);
@@ -456,13 +422,15 @@ Font saveFontToCpp(const char* imagePath, const char* fontDataPath) {
 		g << "static const int fontHeight = " << fontHeight << ";\n";
 		g << "static const int fontImageSizeX = " << image->size().x << ";\n";
 		g << "static const int fontImageSizeY = " << image->size().y << ";\n";
-		g << "static const char fontImage[] {";
-		for (i32 i = 0; i < image->dataSizeBytes(); i++) {
+		g << "static const unsigned char fontImage[] {";
+		for (i32 i = 0; i < image->width() * image->height(); i++) {
 			if (i % 10 == 0) {
 				g << '\n';
 			}
-			const auto data = reinterpret_cast<char*>(image->data());
-			g << i32(data[i]) << ",";
+			//const auto data = reinterpret_cast<char*>(image->data());
+			const auto data = image->data();
+			//g << u32(data[i].r) << "," << u32(data[i].r) << "," << u32(data[i].r) << "," << u32(data[i].r) << ",";
+			g << u32(data[i].r) << ",";
 		}
 		g << "\n};";
 
