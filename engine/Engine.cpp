@@ -5,6 +5,7 @@
 #include <Put.hpp>
 #include <opengl/gl.h>
 #include <GLFW/glfw3.h>
+#include <imgui/implot.h>
 #ifdef __EMSCRIPTEN__
 #include <GLFW/emscripten_glfw3.h>
 #endif
@@ -150,7 +151,7 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 	IMGUI_CHECKVERSION();
 
 	ImGui::CreateContext();
-	//ImPlot::CreateContext();
+	ImPlot::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 	if (fontPath != nullptr) {
@@ -176,7 +177,7 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 void Engine::terminateImGui() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
-	//ImPlot::DestroyContext();
+	ImPlot::DestroyContext();
 	ImGui::DestroyContext();
 }
 

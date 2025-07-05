@@ -9,6 +9,8 @@ endif()
 add_library(engine STATIC 
 	"../dependencies/imgui/imgui.cpp" "../dependencies/imgui/imgui_draw.cpp" "../dependencies/imgui/imgui_impl_glfw.cpp" "../dependencies/imgui/imgui_tables.cpp" "../dependencies/imgui/imgui_widgets.cpp" "../dependencies/imgui/imgui_impl_opengl3.cpp" "../dependencies/imgui/imgui_impl_opengl3.h" "../dependencies/imgui/imgui_demo.cpp"
 
+	"../dependencies/imgui/implot.cpp" "../dependencies/imgui/implot_demo.cpp" "../dependencies/imgui/implot_items.cpp"
+
 	"../dependencies/stb_image/stb_image.cpp" "../dependencies/stb_image/stb_image_resize.cpp" "../dependencies/stb_image/stb_image_write.cpp"
 
 	"../dependencies/stb_vorbis/stb_vorbis.cpp"
