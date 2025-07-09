@@ -19,9 +19,16 @@ float Timer::elapsedSeconds() const {
 }
 
 void Timer::tookSeconds(std::string_view whatTook) const {
-	#ifdef DEBUG
+	//#ifdef DEBUG
 	put("% took % s", whatTook, elapsedSeconds());
-	#endif
+	//#endif
+
+}
+
+void Timer::tookMs(std::string_view whatTook) const {
+	//#ifdef DEBUG
+	put("% took % ms", whatTook, elapsedMilliseconds());
+	//#endif
 
 }
 

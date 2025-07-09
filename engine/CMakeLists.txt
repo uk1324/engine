@@ -23,12 +23,18 @@ add_library(engine STATIC
 
 
 target_include_directories(engine PUBLIC Utils "../")
+
+set(ALSOFT_EXAMPLES OFF)
+
 target_include_directories(engine PUBLIC "../dependencies")
+
+
 
 if(EMSCRIPTEN)
 	target_link_libraries(engine PRIVATE glfw3)
 	target_compile_options(engine PUBLIC "--use-port=contrib.glfw3")
 else()
+	
 	target_link_libraries(engine PRIVATE OpenAL)
 	target_include_directories(engine PUBLIC "../dependencies/openal-soft/include")
 

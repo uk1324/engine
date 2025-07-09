@@ -5,6 +5,9 @@ if (NOT EMSCRIPTEN)
 	set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 	set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 	set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+	set(ALSOFT_EXAMPLES OFF)
+	set(ALSOFT_UTILS OFF)
 	add_subdirectory("./dependencies/openal-soft")
 endif()
 
