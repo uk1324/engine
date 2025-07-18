@@ -47,3 +47,5 @@ Vec3 uniformRandomPointOnTri(const Vec3* v, f32 r0, f32 r1);
 
 Vec2 uniformRandomPointOnTri(Vec2 v0, Vec2 v1, Vec2 v2, f32 r0, f32 r1);
 Vec2 uniformRandomPointOnTri(const Vec2* v, f32 r0, f32 r1);
+
+Vec3 triNormal(const Vec3* v);

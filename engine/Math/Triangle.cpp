@@ -8,14 +8,7 @@ static float sign(float x) {
 }
 
 auto Triangle::contains(Vec2 p) const -> bool {
-	auto area0 = det(v[1] - v[0], p - v[0]);
-	auto area1 = det(v[2] - v[1], p - v[1]);
-	auto area2 = det(v[0] - v[2], p - v[2]);
-	//auto sign = [](float value) -> float { 
-	//	// "<=" So points on the triangle are also return true.
-	//	return value <= 0.0f ? -1.0f : 1.0f; 
-	//};
-	return sign(area0) == sign(area1) && sign(area1) == sign(area2);
+	return triContains(v, p);
 }
 
 auto Triangle::containsWithEpsilon(Vec2 p, float epsilon) -> bool {
@@ -32,4 +25,19 @@ auto Triangle::isClockwise() const -> bool {
 
 auto Triangle::area() -> bool {
 	return abs(det(v[0] - v[1], v[0] - v[2])) / 2.0f;
+}
+
+bool triContains(const Vec2* v, Vec2 p) {
+	auto area0 = det(v[1] - v[0], p - v[0]);
+	auto area1 = det(v[2] - v[1], p - v[1]);
+	auto area2 = det(v[0] - v[2], p - v[2]);
+	auto sign = [](float value) -> float { 
+		// "<=" So points on the triangle are also return true.
+		return value <= 0.0f ? -1.0f : 1.0f; 
+	};
+	return sign(area0) == sign(area1) && sign(area1) == sign(area2);
+}
+
+Vec2 triCentroid(const Vec2* v) {
+	return (v[0] + v[1] + v[2]) / 3.0f;
 }

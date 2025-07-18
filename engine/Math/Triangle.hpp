@@ -12,3 +12,6 @@ struct Triangle {
 	auto isClockwise() const -> bool;
 	auto area() -> bool;
 };
+
+bool triContains(const Vec2* v, Vec2 p);
+Vec2 triCentroid(const Vec2* v);
