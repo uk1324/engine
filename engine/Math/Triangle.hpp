@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec2.hpp"
+#include "Vec3.hpp"
 
 struct Triangle {
 	Triangle(Vec2 v0, Vec2 v1, Vec2 v2);
@@ -15,3 +16,11 @@ struct Triangle {
 
 bool triContains(const Vec2* v, Vec2 p);
 Vec2 triCentroid(const Vec2* v);
+Vec3 barycentricCoordinates(const Vec2* v, Vec2 p);
+template<typename T>
+Vec3 barycentricCoordinatesInterpolate(Vec3 p, const T* v);
+
+template<typename T>
+Vec3 barycentricCoordinatesInterpolate(Vec3 p, const T* v) {
+	return p.x * v[0] + p.y * v[1] + p.z * v[2];
+}

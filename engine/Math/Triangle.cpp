@@ -41,3 +41,21 @@ bool triContains(const Vec2* v, Vec2 p) {
 Vec2 triCentroid(const Vec2* v) {
 	return (v[0] + v[1] + v[2]) / 3.0f;
 }
+
+Vec3 barycentricCoordinates(const Vec2* v, Vec2 p) {
+	const f32 
+		x1 = v[0].x, x2 = v[1].x, x3 = v[2].x,
+		y1 = v[0].y, y2 = v[1].y, y3 = v[2].y;
+
+	const f32 area = (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3);
+
+	// Calculate barycentric weights using 2D cross product
+	auto w1 = (p.x - x2) * (y1 - y2) - (x1 - x2) * (p.y - y2);
+	auto w2 = (p.x - x3) * (y2 - y3) - (x2 - x3) * (p.y - y3);
+	auto w3 = (p.x - x1) * (y3 - y1) - (x3 - x1) * (p.y - y1);
+	w1 /= area;
+	w2 /= area;
+	w3 /= area;
+
+	return Vec3(w2, w3, w1);
+}
