@@ -1,6 +1,17 @@
 #include "Aabb3.hpp"
 #include <array>
 
+Aabb3 Aabb3::fromPoints(View<const Vec3> points) {
+	Vec3 min{ std::numeric_limits<float>::infinity() }, max{ -std::numeric_limits<float>::infinity() };
+
+	for (const auto& point : points) {
+		min = min.min(point);
+		max = max.max(point);
+	}
+
+	return Aabb3::fromMinMax(min, max);
+}
+
 Aabb3 Aabb3::fromMinMax(const Vec3& min, const Vec3& max) {
 	return Aabb3{
 		.min = min,
@@ -60,3 +71,8 @@ std::array<Vec3, 8> Aabb3::corners() const {
 		Vec3(min.x, max.y, max.z),
 	};
 }
+
+Vec3 Aabb3::center() const {
+	return (min + max) / 2.0f;
+}
+

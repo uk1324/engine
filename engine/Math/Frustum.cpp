@@ -75,26 +75,29 @@ std::array<Vec3, 8> Frustum::corners(const Mat4& toNdc) {
 }
 
 bool Frustum::intersects(const Aabb3& aabb) const {
-	auto anyPointsOfAabbOnNegativeSide = [&](const Plane& plane) -> bool {
-		const auto size = aabb.size();
-		// TODO: Why is this adding to min instead of using the coordinates of max.
-		// Why recompute the corner points for each plane
-		return plane.isOnPositiveSide(aabb.min)
-			|| plane.isOnPositiveSide(aabb.max)
-			|| plane.isOnPositiveSide(aabb.min + Vec3(size.x, 0, 0))
-			|| plane.isOnPositiveSide(aabb.min + Vec3(0, size.y, 0))
-			|| plane.isOnPositiveSide(aabb.min + Vec3(0, 0, size.z))
-			|| plane.isOnPositiveSide(aabb.min + Vec3(0, size.y, size.z))
-			|| plane.isOnPositiveSide(aabb.min + Vec3(size.x, 0, size.z))
-			|| plane.isOnPositiveSide(aabb.min + Vec3(size.x, size.y, 0));
-		};
 
-	// Why continue looping when we alredy know it's false?
-	bool inside = true;
-	for (i32 i = 0; i < PLANE_COUNT; i++) {
-		inside &= anyPointsOfAabbOnNegativeSide(planes[i]);
-	}
-	return inside;
+	// This seems broken. 
+	ASSERT_NOT_REACHED();
+	//auto anyPointsOfAabbOnNegativeSide = [&](const Plane& plane) -> bool {
+	//	const auto size = aabb.size();
+	//	// TODO: Why is this adding to min instead of using the coordinates of max.
+	//	// Why recompute the corner points for each plane
+	//	return plane.isOnPositiveSide(aabb.min)
+	//		|| plane.isOnPositiveSide(aabb.max)
+	//		|| plane.isOnPositiveSide(aabb.min + Vec3(size.x, 0, 0))
+	//		|| plane.isOnPositiveSide(aabb.min + Vec3(0, size.y, 0))
+	//		|| plane.isOnPositiveSide(aabb.min + Vec3(0, 0, size.z))
+	//		|| plane.isOnPositiveSide(aabb.min + Vec3(0, size.y, size.z))
+	//		|| plane.isOnPositiveSide(aabb.min + Vec3(size.x, 0, size.z))
+	//		|| plane.isOnPositiveSide(aabb.min + Vec3(size.x, size.y, 0));
+	//	};
+
+	//// Why continue looping when we alredy know it's false?
+	//bool inside = true;
+	//for (i32 i = 0; i < PLANE_COUNT; i++) {
+	//	inside &= anyPointsOfAabbOnNegativeSide(planes[i]);
+	//}
+	//return inside;
 }
 
 bool Frustum::intersects(const Box3& b) const {
@@ -122,6 +125,26 @@ bool Frustum::intersects(const Box3& b) const {
 	//return inside;
 
 	const auto vertices = b.vertices();
+	auto allPointsOnTheOusideSide = [&](const Plane& plane) -> bool {
+		for (const auto& v : vertices) {
+			if (isPointOnInsideSide(v, plane)) {
+				return false;
+			}
+		}
+		return true;
+	};
+
+	for (i32 i = 0; i < PLANE_COUNT; i++) {
+		// If all points on the outside side of a single plane the that plane separates the box from the inside of the frustum.
+		if (allPointsOnTheOusideSide(planes[i])) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Frustum::intersectsTriangle(Vec3 v0, Vec3 v1, Vec3 v2) const {
+	const Vec3 vertices[] { v0, v1, v2 };
 	auto allPointsOnTheOusideSide = [&](const Plane& plane) -> bool {
 		for (const auto& v : vertices) {
 			if (isPointOnInsideSide(v, plane)) {
