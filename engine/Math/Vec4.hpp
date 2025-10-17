@@ -26,6 +26,9 @@ struct Vec4T {
 	T& operator[](i32 i);
 	const T& operator[](i32 i) const;
 
+	Vec4T min(Vec4T v) const;
+	Vec4T max(Vec4T v) const;
+
 	T lengthSquared() const;
 	T length() const;
 	Vec4T<T> normalized() const;
@@ -135,6 +138,26 @@ T& Vec4T<T>::operator[](i32 i) {
 template<typename T>
 const T& Vec4T<T>::operator[](i32 i) const {
 	return const_cast<Vec4T<float>*>(this)->operator[](i);
+}
+
+template<typename T>
+Vec4T<T> Vec4T<T>::min(Vec4T v) const {
+	return Vec4(
+		std::min(x, v.x), 
+		std::min(y, v.y),
+		std::min(z, v.z),
+		std::min(w, v.w)
+	);
+}
+
+template<typename T>
+Vec4T<T> Vec4T<T>::max(Vec4T v) const {
+	return Vec4(
+		std::max(x, v.x),
+		std::max(y, v.y),
+		std::max(z, v.z),
+		std::max(w, v.w)
+	);
 }
 
 template<typename T>
