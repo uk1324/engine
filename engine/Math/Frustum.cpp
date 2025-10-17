@@ -163,6 +163,24 @@ bool Frustum::intersectsTriangle(Vec3 v0, Vec3 v1, Vec3 v2) const {
 	return true;
 }
 
+bool Frustum::intersectsSphere(Vec3 center, f32 radius) const {
+	// https://stackoverflow.com/questions/37512308/choice-of-sphere-frustum-overlap-test
+	// Doesn't discard all sphere
+	for (i32 i = 0; i < PLANE_COUNT; i++) {
+		// If all points on the outside side of a single plane the that plane separates the box from the inside of the frustum.
+		if (!isSphereOnInsideSide(center, radius, planes[i])) {
+			return false;
+		}
+	}
+	return true;
+}
+
 bool Frustum::isPointOnInsideSide(Vec3 v, const Plane& frustumPlane) const {
 	return !frustumPlane.isOnPositiveSide(v);
+}
+
+
+bool Frustum::isSphereOnInsideSide(Vec3 center, f32 radius, const Plane& frustumPlane) const {
+	// A more precise name might is any part of the sphere on the inside side.
+	return frustumPlane.signedDistance(center) < radius;
 }

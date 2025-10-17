@@ -38,9 +38,11 @@ struct Frustum {
 	bool intersects(const Aabb3& aabb) const;
 	bool intersects(const Box3& b) const;
 	bool intersectsTriangle(Vec3 v0, Vec3 v1, Vec3 v2) const;
+	bool intersectsSphere(Vec3 center, f32 radius) const;
 
 	// Plane normals point outside. That is the positive side of the plane is the outside.
 	// So the positive side is the outside side and the negative side is the inside side.
 	Plane planes[PLANE_COUNT];
 	bool isPointOnInsideSide(Vec3 v, const Plane& frustumPlane) const;
+	bool isSphereOnInsideSide(Vec3 center, f32 radius, const Plane& frustumPlane) const;
 };
