@@ -19,5 +19,11 @@ T smoothstep(T x) {
 	return x * x * (3.0f - 2.0f * x);
 }
 
+template<typename T>
+T smoothstep(f32 edge0, f32 edge1, T x) {
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/smoothstep.xhtml
+	return smoothstep((x - edge0) / (edge1 - edge0));
+}
+
 
 f32 piecewiseLinearSample(View<const Vec2> points, f32 x);
