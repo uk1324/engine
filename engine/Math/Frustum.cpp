@@ -1,7 +1,7 @@
 #include "Frustum.hpp"
 
 Frustum Frustum::fromMatrix(const Mat4& toNdc) {
-	const auto c = corners(toNdc);
+	const auto c = calculateCorners(toNdc);
 	const Frustum result{
 		.planes = {
 			/*Plane::fromPoints(c[FRONT_BOTTOM_LEFT_CORNER], c[FRONT_BOTTOM_RIGHT_CORNER], c[FRONT_TOP_RIGHT_CORNER]),
@@ -17,7 +17,8 @@ Frustum Frustum::fromMatrix(const Mat4& toNdc) {
 			Plane::fromPoints(c[FRONT_BOTTOM_RIGHT_CORNER], c[FRONT_TOP_RIGHT_CORNER], c[BACK_BOTTOM_RIGHT_CORNER]),
 			Plane::fromPoints(c[FRONT_TOP_RIGHT_CORNER], c[FRONT_TOP_LEFT_CORNER], c[BACK_TOP_RIGHT_CORNER]),
 			Plane::fromPoints(c[FRONT_BOTTOM_RIGHT_CORNER], c[BACK_BOTTOM_RIGHT_CORNER], c[FRONT_BOTTOM_LEFT_CORNER]),
-		}
+		},
+		.corners = c,
 	};
 	//const auto t = result.planes[0].signedDistance(c[BACK_BOTTOM_RIGHT_CORNER]);
 	//// This should be negative, because it is on the inside of the frustum so it should be on the negative side of the plane.
@@ -46,7 +47,7 @@ Frustum Frustum::fromMatrix(const Mat4& toNdc) {
  	return result;
 }
 
-std::array<Vec3, 8> Frustum::corners(const Mat4& toNdc) {
+std::array<Vec3, 8> Frustum::calculateCorners(const Mat4& toNdc) {
 	const auto fromNdcToFrustum = toNdc.inversed();
 	auto transform = [&](Vec3 v) -> Vec3 {
 		const auto a = Vec4(v, 1.0f) * fromNdcToFrustum;
@@ -143,7 +144,9 @@ bool Frustum::intersects(const Box3& b) const {
 	return true;
 }
 
-bool Frustum::intersectsTriangle(Vec3 v0, Vec3 v1, Vec3 v2) const {
+// https://iquilezles.org/articles/frustumcorrect/
+
+bool Frustum::intersectsTriangleInexact(Vec3 v0, Vec3 v1, Vec3 v2) const {
 	const Vec3 vertices[] { v0, v1, v2 };
 	auto allPointsOnTheOusideSide = [&](const Plane& plane) -> bool {
 		for (const auto& v : vertices) {
@@ -161,6 +164,46 @@ bool Frustum::intersectsTriangle(Vec3 v0, Vec3 v1, Vec3 v2) const {
 		}
 	}
 	return true;
+}
+
+bool Frustum::intersectsTriangleInexact1(Vec3 v0, Vec3 v1, Vec3 v2) const {
+	const auto trianglePlane = Plane::fromPoints(v0, v1, v2);
+	auto side = [&](Vec3 point) {
+		return trianglePlane.signedDistance(point) > 0.0f;
+	};
+	bool cornerSide0 = side(corners[0]);
+	for (i32 i = 1; i < CORNER_COUNT; i++) {
+		if (cornerSide0 != side(corners[i])) {
+			return true;
+		}
+	}
+
+	Vec3 vertices[]{ v0, v1, v2 };
+	i32 previousVertex = 2;
+	for (i32 vI = 0; vI < 3; vI++) {
+		const auto edge = vertices[previousVertex] - vertices[vI];
+		const auto edgeNormal = cross(trianglePlane.n, edge).normalized();
+		const auto edgePlane = Plane::fromPointAndNormal(vertices[vI], edgeNormal);
+
+		auto side = [&](Vec3 point) {
+			return edgePlane.signedDistance(point) > 0.0f;
+		};
+
+		{
+			bool cornerSide0 = side(corners[0]);
+			for (i32 i = 1; i < CORNER_COUNT; i++) {
+				if (cornerSide0 != side(corners[i])) {
+					return true;
+				}
+			}
+		}
+
+
+		previousVertex = vI;
+	}
+	// Work's because the triangle plane separates the triangle from the frustum.
+	// Won't work for example if the triangle plane is parallel to the front and back plane and is between them. Then there will be points on both sides of the triangle plane. It's easy to see this remains true if the triangle is rotated a bit and there are many other cases.
+	return false;
 }
 
 bool Frustum::intersectsSphere(Vec3 center, f32 radius) const {

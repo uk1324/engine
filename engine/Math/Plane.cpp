@@ -19,6 +19,10 @@ Plane Plane::fromPoints(const Vec3& a, const Vec3& b, const Vec3& c) {
 	return Plane(normal, distance);
 }
 
+Plane Plane::fromPointAndNormal(Vec3 point, Vec3 normal) {
+	return Plane(normal.normalized(), dot(normal, point));
+}
+
 float Plane::signedDistance(const Vec3& p) const {
 	return dot(p, n) - d;
 }

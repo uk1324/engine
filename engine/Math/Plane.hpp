@@ -8,6 +8,7 @@ struct Plane {
 	// Assumes that n is normalized.
 	Plane(Vec3 n, float d);
 	static Plane fromPoints(const Vec3& a, const Vec3& b, const Vec3& c);
+	static Plane fromPointAndNormal(Vec3 point, Vec3 normal);
 
 	float signedDistance(const Vec3& p) const;
 	float distance(const Vec3& p) const;
