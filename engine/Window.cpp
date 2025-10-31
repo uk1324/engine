@@ -135,6 +135,17 @@ void Window::update() {
 	#ifndef __EMSCRIPTEN__
 	glfwSwapBuffers(windowHandle);
 	#endif
+
+	//{
+	//	//const auto monitor = glfwGetWindowMonitor(windowHandle);
+	//	const auto monitor = glfwGetPrimaryMonitor();
+	//	int count;
+	//	const auto modes = glfwGetVideoModes(monitor, &count);
+	//	for (i32 i = 0; i < count; i++) {
+	//		auto mode = modes[i];
+	//		int x = 5;
+	//	}
+	//}
 }
 
 void Window::close() {
