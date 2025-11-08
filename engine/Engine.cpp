@@ -155,7 +155,7 @@ void Engine::initImGui(const char* fontPath, const char* imGuiIniPath) {
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 	if (fontPath != nullptr) {
-		io.Fonts->AddFontFromFileTTF(fontPath);
+		io.Fonts->AddFontFromFileTTF(fontPath, 20.0f);
 	}
 	
 	/*io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;*/
