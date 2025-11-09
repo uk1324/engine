@@ -7,6 +7,7 @@
 
 template<typename T>
 struct Vec4T {
+	Vec4T();
 	explicit constexpr Vec4T(const T& v);
 	constexpr Vec4T(const T& x, const T& y, const T& z, const T& w = 1);
 	explicit constexpr Vec4T(Vec3T<T> v, const T& w = 1);
@@ -54,6 +55,13 @@ template<typename T>
 T dot(const Vec4T<T>& a, const Vec4T<T>& b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
+
+template<typename T>
+inline Vec4T<T>::Vec4T()
+	: x(0.0f)
+	, y(0.0f)
+	, z(0.0f)
+	, w(0.0f) {}
 
 template<typename T>
 constexpr Vec4T<T>::Vec4T(const T& v)
