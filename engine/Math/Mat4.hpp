@@ -6,6 +6,11 @@
 template<typename T>
 struct Mat4T {
 	constexpr Mat4T(const Vec4T<T>& x, const Vec4T<T>& y, const Vec4T<T>& z, const Vec4T<T>& w);
+	constexpr Mat4T(
+		f32 v0x, f32 v1x, f32 v2x, f32 v3x,
+		f32 v0y, f32 v1y, f32 v2y, f32 v3y,
+		f32 v0z, f32 v1z, f32 v2z, f32 v3z,
+		f32 v0w, f32 v1w, f32 v2w, f32 v3w);
 	explicit constexpr Mat4T(const Mat3T<T>& m);
 
 	// Using a target instead of direction seems more general. If you already have a direction the code to create a target is more easily readable than the code for creating the direciton if you have position and target.
