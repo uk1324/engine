@@ -52,6 +52,20 @@ constexpr Mat4T<T>::Mat4T(const Vec4T<T>& x, const Vec4T<T>& y, const Vec4T<T>& 
 	: basis{ x, y, z, w } {}
 
 template<typename T>
+constexpr Mat4T<T>::Mat4T(
+	f32 v0x, f32 v1x, f32 v2x, f32 v3x, 
+	f32 v0y, f32 v1y, f32 v2y, f32 v3y, 
+	f32 v0z, f32 v1z, f32 v2z, f32 v3z, 
+	f32 v0w, f32 v1w, f32 v2w, f32 v3w)
+	: basis{
+		Vec4T(v0x, v0y, v0z, v0w),
+		Vec4T(v1x, v1y, v1z, v1w),
+		Vec4T(v2x, v2y, v2z, v2w),
+		Vec4T(v3x, v3y, v3z, v3w)
+	} {
+}
+
+template<typename T>
 constexpr Mat4T<T>::Mat4T(const Mat3T<T>& m) 
 	: basis{ Vec4T<T>(m[0], 0), Vec4T<T>(m[1], 0), Vec4T<T>(m[2], 0), Vec4T<T>(0, 0, 0, 1) } {
 }
