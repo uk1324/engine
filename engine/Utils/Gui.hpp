@@ -56,3 +56,12 @@ const char* prependWithHashHash(const char* str);
 		} \
 		Gui::popPropertyEditor(); \
 	} while (false)
+
+#define GUI_PROPERTY_EDITOR_ID(id, editorCode) \
+	do { \
+		if (Gui::beginPropertyEditor(id)) { \
+			{ editorCode; } \
+			Gui::endPropertyEditor(); \
+		} \
+		Gui::popPropertyEditor(); \
+	} while (false)

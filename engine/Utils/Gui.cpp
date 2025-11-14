@@ -16,8 +16,13 @@ const char* Gui::prependWithHashHash(const char* str) {
 void Gui::leafNodeBegin(const char* name) {
 	ImGui::TableNextRow();
 	ImGui::TableSetColumnIndex(0);
-	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-	ImGui::TreeNodeEx(name, flags);
+	/*ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+	ImGui::TreeNodeEx(name, flags);*/
+	{
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(name);
+	}
+
 	ImGui::TableSetColumnIndex(1);
 	ImGui::SetNextItemWidth(-FLT_MIN);
 }
