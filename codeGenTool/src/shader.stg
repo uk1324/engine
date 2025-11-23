@@ -2,7 +2,7 @@ vert(shader, generatedForFirstTime) ::= <<
 #version 430 core
 <if(shader.vertexAttributes)>
 
-<shader.vertexAttributes : { attribute | layout(location = <attribute.layout>) in <inOrOutVariable(attribute.field.dataType, vertexAttributeName(attribute.nameFirstLetterUppercase, attribute.isPerInstance))>; }; separator="\n"><\\>
+<shader.vertexAttributes : { attribute | layout(location = <attribute.layout>) in <vertexVariable(attribute.field.dataType, vertexAttributeName(attribute.nameFirstLetterUppercase, attribute.isPerInstance))>; }; separator="\n"><\\>
 <endif><\\>
 <if(shader.vertUniforms.fields)>
 
@@ -48,7 +48,7 @@ frag(shader, generatedForFirstTime) ::= <<
 <endif><\\>
 <if(shader.instanceFragFields)>
 
-<shader.instanceFragFields : { variable | in <inOrOutVariable(variable.dataType, variable.name)>; }; separator="\n">
+<shader.instanceFragFields : { variable | in <instanceVariable(variable.dataType, variable.name)>; }; separator="\n">
 <endif><\\>
 
 out vec4 fragColor;
@@ -67,6 +67,16 @@ inOrOutVariable(dataType, name) ::= <%
 flat int <name>
 <elseif(dataType.isBool)>
 flat bool <name>
+<else>
+<dataType.nameFirstLetterLowercase> <name>
+<endif>
+%>
+
+vertexVariable(dataType, name) ::= <%
+<if(dataType.isI32)>
+int <name>
+<elseif(dataType.isBool)>
+ bool <name>
 <else>
 <dataType.nameFirstLetterLowercase> <name>
 <endif>
