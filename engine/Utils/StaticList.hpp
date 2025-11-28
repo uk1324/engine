@@ -4,7 +4,7 @@
 
 template<typename T, size_t SIZE>
 struct StaticList {
-
+	using value_type = T;
 	StaticList();
 	StaticList(const StaticList& other);
 
