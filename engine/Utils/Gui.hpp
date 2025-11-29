@@ -65,3 +65,6 @@ const char* prependWithHashHash(const char* str);
 		} \
 		Gui::popPropertyEditor(); \
 	} while (false)
+
+#define GUI_PROPERTY_EDITOR_BEGIN(id) if (Gui::beginPropertyEditor(id)) {
+#define GUI_PROPERTY_EDITOR_END() Gui::endPropertyEditor(); } Gui::popPropertyEditor()
