@@ -48,7 +48,7 @@ frag(shader, generatedForFirstTime) ::= <<
 <endif><\\>
 <if(shader.instanceFragFields)>
 
-<shader.instanceFragFields : { variable | in <instanceVariable(variable.dataType, variable.name)>; }; separator="\n">
+<shader.instanceFragFields : { variable | in <inOrOutVariable(variable.dataType, variable.name)>; }; separator="\n">
 <endif><\\>
 
 out vec4 fragColor;

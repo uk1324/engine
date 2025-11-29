@@ -68,7 +68,7 @@ constexpr Vec4T<T>::Vec4T(const T& v)
 	: x(v)
 	, y(v)
 	, z(v)
-	, w(0.0f) {}
+	, w(v) {}
 
 template<typename T>
 constexpr Vec4T<T>::Vec4T(const T& x, const T& y, const T& z, const T& w)
