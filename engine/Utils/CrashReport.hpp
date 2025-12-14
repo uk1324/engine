@@ -1,3 +1,4 @@
 #pragma once
 
-[[noreturn]] void crashReportMessageBox(const char* text, const char* functionName, int line);
+[[noreturn]] void crashReportMessageBoxWithLocation(const char* text, const char* functionName, int line);
+[[noreturn]] void crashReportMessageBox(const char* format, ...);

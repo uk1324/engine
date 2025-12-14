@@ -8,12 +8,18 @@
 
 #endif
 
-void crashReportMessageBox(const char* text, const char* functionName, int line) {
-	char message[1024];
-	snprintf(message, sizeof(message), "location\n line = %d\nfunction = %s\nmessage\n%s", line, functionName, text);
-	#ifdef _WIN32
-	MessageBoxA(nullptr, message, "crash report", MB_OK | MB_ICONEXCLAMATION);
-	#endif // For other platforms maybe use GTK or SDL. 
+[[noreturn]] void crashReportMessageBoxWithLocation(const char* text, const char* functionName, int line) {
+	crashReportMessageBox("line = %d\nfunction = %s\nmessage\n%s", line, functionName, text);
+}
 
+[[noreturn]] void crashReportMessageBox(const char* text, ...) {
+	va_list args;
+	va_start(args, text);
+	char message[1024];
+	vsnprintf(message, sizeof(message), text, args);
+	#ifdef _WIN32
+	MessageBoxA(nullptr, message, "error", MB_OK | MB_ICONEXCLAMATION);
+	#endif // For other platforms maybe use GTK or SDL. 
+	va_end(args);
 	exit(EXIT_FAILURE);
 }

@@ -16,3 +16,4 @@ std::string& StringStream::string() {
 const std::string& StringStream::string() const {
 	return buffer.buffer;
 }
+

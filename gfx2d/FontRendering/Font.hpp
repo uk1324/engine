@@ -104,4 +104,4 @@ std::expected<Font, Font::LoadError> fontLoadSdfWithCaching(
 Font loadFontSdfFromMemory(
 	i32 pixelHeight, std::unordered_map<char32_t, Glyph>&& glyphs,
 	const u8* image, i32 imageSizeX, i32 imageSizeY);
-Font saveFontToCpp(const char* imagePath, const char* fontDataPath);
+void saveFontToCpp(const char* imagePath, const char* fontDataPath);

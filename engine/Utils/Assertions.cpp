@@ -13,9 +13,9 @@ bool assertImplementation(bool condition, const char* functionName, int line) {
 	DEBUG_BREAK();
 	#endif
 
-	#ifdef CLIENT
+	//#ifdef CLIENT
 	crashReportMessageBox("assertion failed", functionName, line);
-	#else
+	/*#else
 	printf(
 		"assertion failed\n"
 		"functionName = %s\n"
@@ -23,7 +23,7 @@ bool assertImplementation(bool condition, const char* functionName, int line) {
 		functionName, line
 	);
 	exit(EXIT_FAILURE);
-	#endif
+	#endif*/
 
 	return !condition;
 }

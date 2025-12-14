@@ -2,6 +2,8 @@
 
 #include <Put.hpp>
 #include <DebugBreak.hpp>
+#include <CrashReport.hpp>
+#include <FixedSizeStringStream.hpp>
 
 namespace Log {
 	template<typename ...Args>
@@ -26,11 +28,15 @@ namespace Log {
 
 	template<typename ...Args>
 	[[noreturn]] void fatal(const char* format, const Args& ...args) {
+	#ifdef FINAL_RELEASE
+		FixedSizeStringStream<1024> s;
+		put(s, format, args...);
+		crashReportMessageBox("%s", s.str());
+	#else
+		DEBUG_BREAK();
 		putnn(std::cerr, "[FATAL] ");
 		put(std::cerr, format, args...);
-#ifndef FINAL_RELEASE
-		DEBUG_BREAK();
-#endif
+	#endif
 		exit(EXIT_FAILURE);
 	}
 }

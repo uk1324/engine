@@ -306,7 +306,10 @@ std::optional<TextRenderInfoIterator::CharacterRenderInfo> TextRenderInfoIterato
 	const auto& info = characterIt->second;
 
 	float scale = maxHeight * (1.0f / font.pixelHeight);
-	auto centerPos = pos + Vec2(info.bearingRelativeToOffsetInAtlas.x, -(info.sizeInAtlas.y - info.bearingRelativeToOffsetInAtlas.y)) * scale;
+	auto centerPos = pos + Vec2(
+		f32(info.bearingRelativeToOffsetInAtlas.x), 
+		-(f32(info.sizeInAtlas.y) - f32(info.bearingRelativeToOffsetInAtlas.y))
+	) * scale;
 	const auto size = Vec2(info.sizeInAtlas) * scale;
 	centerPos += size / 2.0f;
 
@@ -374,7 +377,7 @@ Font loadFontSdfFromMemory(i32 pixelHeight, std::unordered_map<char32_t, Glyph>&
 
 #include <SourceGenerator.hpp>
 
-Font saveFontToCpp(const char* imagePath, const char* fontDataPath) {
+void saveFontToCpp(const char* imagePath, const char* fontDataPath) {
 	auto image = Image32::fromFile(imagePath);
 
 	if (!image.has_value()) {

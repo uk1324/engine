@@ -3,6 +3,7 @@
 #include <stb_image/stb_image_write.h>
 #include <stb_image/stb_image_resize.h>
 #include <string.h>
+#include <engine/Log.hpp>
 
 Image32::Image32(const char* path, bool& loadedCorrectly) 
 	: size_(0, 0) {
@@ -16,7 +17,10 @@ static thread_local bool loadedCorrectly;
 
 Image32::Image32(const char* path)
 	: Image32{ path, loadedCorrectly } {
-	ASSERT(loadedCorrectly);
+	if (!loadedCorrectly) {
+		Log::fatal("failed to load '%'", path);
+	}
+	//ASSERT(loadedCorrectly);
 }
 
 Image32::~Image32() {
